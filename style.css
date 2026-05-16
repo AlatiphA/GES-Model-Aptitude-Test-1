@@ -34,6 +34,8 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-around;
+
+  flex-shrink: 0;
 }
 
 .bottomFooter {
@@ -43,21 +45,29 @@ footer {
   align-items: center;
   justify-content: space-around;
 
+  flex-shrink: 0;
+
   border-top: 1px solid #333;
 }
 
 .bottomBtn {
+  width: 44px;
+  height: 44px;
+
   border: none;
+  border-radius: 10px;
 
   background: transparent;
 
   color: white;
 
-  font-size: 14px;
+  font-size: 22px;
 
   cursor: pointer;
 
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 body {
