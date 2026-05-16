@@ -13,6 +13,53 @@ body {
   font-family: Arial, sans-serif;
 }
 
+footer {
+  position: relative;
+
+  height: 120px;
+
+  background: #1e1e1e;
+
+  display: flex;
+  flex-direction: column;
+
+  flex-shrink: 0;
+
+  z-index: 9999;
+}
+
+.topFooter {
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.bottomFooter {
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  border-top: 1px solid #333;
+}
+
+.bottomBtn {
+  border: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  padding: 10px;
+}
+
 body {
   background: #f5f5f5;
   color: #111;
@@ -83,7 +130,7 @@ main {
   position: relative;
 
   width: 100%;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 180px);
 
   overflow: hidden;
 
