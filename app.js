@@ -28,6 +28,31 @@ const increaseFont =
 const decreaseFont =
   document.getElementById("decreaseFont");
 
+const bottomThemeBtn =
+  document.getElementById(
+    "bottomThemeBtn"
+  );
+
+const bottomDecreaseFont =
+  document.getElementById(
+    "bottomDecreaseFont"
+  );
+
+const bottomIncreaseFont =
+  document.getElementById(
+    "bottomIncreaseFont"
+  );
+
+const bottomMenuBtn =
+  document.getElementById(
+    "bottomMenuBtn"
+  );
+
+const closeAppBtn =
+  document.getElementById(
+    "closeAppBtn"
+  );
+
 const header =
   document.querySelector(
     "header"
@@ -442,6 +467,60 @@ decreaseFont.addEventListener(
 
   }
 );
+
+bottomThemeBtn.addEventListener(
+  "click",
+  () => {
+
+    themeBtn.click();
+
+  }
+);
+
+bottomDecreaseFont.addEventListener(
+  "click",
+  () => {
+
+    decreaseFont.click();
+
+  }
+);
+
+bottomIncreaseFont.addEventListener(
+  "click",
+  () => {
+
+    increaseFont.click();
+
+  }
+);
+
+bottomMenuBtn.addEventListener(
+  "click",
+  () => {
+
+    menuBtn.click();
+
+  }
+);
+
+closeAppBtn.addEventListener(
+  "click",
+  () => {
+
+    if (
+      confirm(
+        "Close EPUB Reader?"
+      )
+    ) {
+
+      window.close();
+
+    }
+
+  }
+);
+
 
 if (
   "serviceWorker" in navigator
