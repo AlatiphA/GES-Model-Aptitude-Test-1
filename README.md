@@ -1,2 +1,2 @@
-# AlatiphA-EPUB-Beta
-Installable PWA EPUB Reader. 
+# AlatiphA-EPUB
+EPUB Reader 
