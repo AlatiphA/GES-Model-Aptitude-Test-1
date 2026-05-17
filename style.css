@@ -35,11 +35,15 @@ body.dark {
 }
 
 header {
-  position: relative;
+  position: fixed;
 
-  height: 60px;
+  top: 0;
+  left: 0;
+  right: 0;
 
-  background: #1e1e1e;
+  height: 50px;
+
+  background: rgba(30,30,30,0.92);
 
   display: flex;
   align-items: center;
@@ -47,13 +51,13 @@ header {
 
   padding: 0 12px;
 
-  flex-shrink: 0;
-
   z-index: 9999;
 
+  backdrop-filter: blur(8px);
+
   transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .title {
@@ -116,6 +120,12 @@ body.dark #viewer {
 }
 
 footer {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   height: 78px;
 
   background: rgba(30,30,30,0.96);
@@ -123,13 +133,15 @@ footer {
   display: flex;
   flex-direction: column;
 
-  flex-shrink: 0;
-
   z-index: 9999;
 
   backdrop-filter: blur(8px);
 
   border-top: 1px solid #333;
+
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .topFooter {
@@ -317,9 +329,15 @@ body.dark #toc a:hover {
 .hideControls {
   opacity: 0 !important;
 
-  visibility: hidden !important;
-
   pointer-events: none !important;
+}
+
+header.hideControls {
+  transform: translateY(-100%);
+}
+
+footer.hideControls {
+  transform: translateY(100%);
 }
 
 #navOverlay {
