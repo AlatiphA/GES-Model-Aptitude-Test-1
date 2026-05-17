@@ -450,10 +450,14 @@ async function searchBook(
           results.push({
 
             cfi:
-              match.cfi,
+              match.cfi || null,
+
+            href:
+              item.href,
 
             excerpt:
-              match.excerpt
+              match.excerpt ||
+              "Result found"
 
           });
 
@@ -515,13 +519,63 @@ function renderSearchResults(
         "click",
         async () => {
 
-          await rendition.display(
-            result.cfi
-          );
+          try {
 
-          searchModal.classList.remove(
-            "active"
-          );
+            if (
+              result.cfi
+            ) {
+
+              await rendition.display(
+                result.cfi
+              );
+
+            }
+
+            else {
+
+              await rendition.display(
+                result.href
+              );
+
+            }
+
+            searchModal.classList.remove(
+              "active"
+            );
+
+          }
+
+          catch (error) {
+
+            console.error(
+              error
+            );
+
+            try {
+
+              await rendition.display(
+                result.href
+              );
+
+              searchModal.classList.remove(
+                "active"
+              );
+
+            }
+
+            catch (err) {
+
+              console.error(
+                err
+              );
+
+              alert(
+                "Could not open search result."
+              );
+
+            }
+
+          }
 
         }
       );
