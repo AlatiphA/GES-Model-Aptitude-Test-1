@@ -1,32 +1,57 @@
 const viewer =
-  document.getElementById("viewer");
+  document.getElementById(
+    "viewer"
+  );
 
 const toc =
-  document.getElementById("toc");
+  document.getElementById(
+    "toc"
+  );
 
 const progressText =
-  document.getElementById("progressText");
+  document.getElementById(
+    "progressText"
+  );
+
+const progressFill =
+  document.getElementById(
+    "progressFill"
+  );
 
 const sidebar =
-  document.getElementById("sidebar");
+  document.getElementById(
+    "sidebar"
+  );
 
 const menuBtn =
-  document.getElementById("menuBtn");
+  document.getElementById(
+    "menuBtn"
+  );
 
 const themeBtn =
-  document.getElementById("themeBtn");
+  document.getElementById(
+    "themeBtn"
+  );
 
 const nextPage =
-  document.getElementById("nextPage");
+  document.getElementById(
+    "nextPage"
+  );
 
 const prevPage =
-  document.getElementById("prevPage");
+  document.getElementById(
+    "prevPage"
+  );
 
 const increaseFont =
-  document.getElementById("increaseFont");
+  document.getElementById(
+    "increaseFont"
+  );
 
 const decreaseFont =
-  document.getElementById("decreaseFont");
+  document.getElementById(
+    "decreaseFont"
+  );
 
 const bottomThemeBtn =
   document.getElementById(
@@ -88,8 +113,26 @@ const footer =
     "footer"
   );
 
+const leftZone =
+  document.getElementById(
+    "leftZone"
+  );
+
+const centerZone =
+  document.getElementById(
+    "centerZone"
+  );
+
+const rightZone =
+  document.getElementById(
+    "rightZone"
+  );
+
 let rendition;
 let book;
+
+let controlsVisible =
+  true;
 
 let fontSize =
   Number(
@@ -97,8 +140,6 @@ let fontSize =
       "fontSize"
     )
   ) || 100;
-
-let controlsVisible = true;
 
 async function loadBook() {
 
@@ -144,19 +185,12 @@ function startReader() {
     book.renderTo(
       "viewer",
       {
-
         width: "100%",
-
         height: "100%",
-
         spread: "none",
-
         manager: "default",
-
         flow: "paginated",
-
         snap: true
-
       }
     );
 
@@ -213,20 +247,15 @@ function startReader() {
             }
           );
 
-          toc.appendChild(link);
+          toc.appendChild(
+            link
+          );
 
         }
       );
 
       await book.locations.generate(
         1000
-      );
-
-    })
-    .catch(error => {
-
-      console.error(
-        error
       );
 
     });
@@ -249,10 +278,10 @@ function startReader() {
           );
 
         progressText.textContent =
-         percent + "%";
+          percent + "%";
 
         progressFill.style.width =
-         percent + "%";
+          percent + "%";
 
         localStorage.setItem(
           "epub-location",
@@ -263,9 +292,7 @@ function startReader() {
 
       catch (error) {
 
-        console.error(
-          error
-        );
+        console.error(error);
 
       }
 
@@ -304,21 +331,6 @@ function toggleControls() {
   }
 
 }
-
-const leftZone =
-  document.getElementById(
-    "leftZone"
-  );
-
-const centerZone =
-  document.getElementById(
-    "centerZone"
-  );
-
-const rightZone =
-  document.getElementById(
-    "rightZone"
-  );
 
 function sidebarIsOpen() {
 
@@ -410,7 +422,9 @@ function applyTheme() {
 
 }
 
-async function searchBook(query) {
+async function searchBook(
+  query
+) {
 
   searchResults.innerHTML =
     "Searching...";
@@ -427,46 +441,24 @@ async function searchBook(query) {
         book.load.bind(book)
       );
 
-      const text =
-        item.document.body
-          .innerText;
+      const matches =
+        item.find(query);
 
-      const lowerText =
-        text.toLowerCase();
+      matches.forEach(
+        match => {
 
-      const lowerQuery =
-        query.toLowerCase();
+          results.push({
 
-      if (
-        lowerText.includes(
-          lowerQuery
-        )
-      ) {
+            cfi:
+              match.cfi,
 
-        const index =
-          lowerText.indexOf(
-            lowerQuery
-          );
+            excerpt:
+              match.excerpt
 
-        const snippet =
-          text.substring(
-            Math.max(
-              0,
-              index - 50
-            ),
-            index + 100
-          );
+          });
 
-        results.push({
-
-          cfi:
-            item.cfiBase,
-
-          snippet
-
-        });
-
-      }
+        }
+      );
 
       item.unload();
 
@@ -493,7 +485,8 @@ function renderSearchResults(
   results
 ) {
 
-  searchResults.innerHTML = "";
+  searchResults.innerHTML =
+    "";
 
   if (!results.length) {
 
@@ -516,13 +509,13 @@ function renderSearchResults(
         "searchItem";
 
       div.textContent =
-        result.snippet;
+        result.excerpt;
 
       div.addEventListener(
         "click",
-        () => {
+        async () => {
 
-          rendition.display(
+          await rendition.display(
             result.cfi
           );
 
@@ -612,7 +605,8 @@ decreaseFont.addEventListener(
   "click",
   () => {
 
-    if (fontSize <= 70) return;
+    if (fontSize <= 70)
+      return;
 
     fontSize -= 10;
 
@@ -668,15 +662,7 @@ closeAppBtn.addEventListener(
   "click",
   () => {
 
-    if (
-      confirm(
-        "Close EPUB Reader?"
-      )
-    ) {
-
-      window.close();
-
-    }
+    history.back();
 
   }
 );
@@ -716,7 +702,8 @@ searchInput.addEventListener(
       const query =
         searchInput.value.trim();
 
-      if (!query) return;
+      if (!query)
+        return;
 
       searchBook(query);
 
@@ -745,9 +732,7 @@ if (
 
       catch (error) {
 
-        console.error(
-          error
-        );
+        console.error(error);
 
       }
 
