@@ -208,6 +208,7 @@ function startReader() {
   );
 
   applyTheme();
+  setupNavigationZones();
 
   book.ready
     .then(async () => {
@@ -340,44 +341,162 @@ function sidebarIsOpen() {
 
 }
 
-leftZone.addEventListener(
-  "click",
-  e => {
+function setupNavigationZones() {
 
-    if (sidebarIsOpen()) return;
+  function zonesDisabled() {
 
-    e.stopPropagation();
+    if (
+      sidebarIsOpen()
+    ) {
 
-    rendition.prev();
+      return true;
+
+    }
+
+    const iframe =
+      viewer.querySelector(
+        "iframe"
+      );
+
+    if (!iframe) {
+
+      return false;
+
+    }
+
+    try {
+
+      const active =
+        iframe.contentDocument
+          .activeElement;
+
+      if (!active) {
+
+        return false;
+
+      }
+
+      const tag =
+        active.tagName;
+
+      return (
+        tag === "A" ||
+        tag === "BUTTON" ||
+        tag === "INPUT"
+      );
+
+    }
+
+    catch {
+
+      return false;
+
+    }
 
   }
-);
 
-rightZone.addEventListener(
-  "click",
-  e => {
+  leftZone.addEventListener(
+    "click",
+    e => {
 
-    if (sidebarIsOpen()) return;
+      if (
+        zonesDisabled()
+      ) return;
 
-    e.stopPropagation();
+      const iframe =
+        viewer.querySelector(
+          "iframe"
+        );
 
-    rendition.next();
+      if (!iframe) return;
 
-  }
-);
+      try {
 
-centerZone.addEventListener(
-  "click",
-  e => {
+        const doc =
+          iframe.contentDocument;
 
-    if (sidebarIsOpen()) return;
+        const selection =
+          doc.getSelection();
 
-    e.stopPropagation();
+        if (
+          selection &&
+          selection.toString()
+        ) {
 
-    toggleControls();
+          return;
 
-  }
-);
+        }
+
+      }
+
+      catch {}
+
+      e.stopPropagation();
+
+      rendition.prev();
+
+    }
+  );
+
+  rightZone.addEventListener(
+    "click",
+    e => {
+
+      if (
+        zonesDisabled()
+      ) return;
+
+      const iframe =
+        viewer.querySelector(
+          "iframe"
+        );
+
+      if (!iframe) return;
+
+      try {
+
+        const doc =
+          iframe.contentDocument;
+
+        const selection =
+          doc.getSelection();
+
+        if (
+          selection &&
+          selection.toString()
+        ) {
+
+          return;
+
+        }
+
+      }
+
+      catch {}
+
+      e.stopPropagation();
+
+      rendition.next();
+
+    }
+  );
+
+  centerZone.addEventListener(
+    "click",
+    e => {
+
+      if (
+        zonesDisabled()
+      ) return;
+
+      e.stopPropagation();
+
+      toggleControls();
+
+    }
+  );
+
+}
 
 function applyTheme() {
 
