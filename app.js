@@ -604,15 +604,6 @@ function renderSearchResults(
 
 }
 
-      searchResults.appendChild(
-        div
-      );
-
-    }
-  );
-
-}
-
 menuBtn.addEventListener(
   "click",
   () => {
