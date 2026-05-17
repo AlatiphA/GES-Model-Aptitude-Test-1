@@ -224,7 +224,10 @@ function startReader() {
           );
 
         progressText.textContent =
-          percent + "%";
+         percent + "%";
+
+        progressFill.style.width =
+         percent + "%";
 
         localStorage.setItem(
           "epub-location",
