@@ -441,28 +441,77 @@ async function searchBook(
         book.load.bind(book)
       );
 
-      const matches =
-        item.find(query);
+      const doc =
+        item.document;
 
-      matches.forEach(
-        match => {
+      const walker =
+        doc.createTreeWalker(
+          doc.body,
+          NodeFilter.SHOW_TEXT
+        );
+
+      let node;
+
+      while (
+        (node = walker.nextNode())
+      ) {
+
+        const text =
+          node.textContent;
+
+        const lowerText =
+          text.toLowerCase();
+
+        const lowerQuery =
+          query.toLowerCase();
+
+        const index =
+          lowerText.indexOf(
+            lowerQuery
+          );
+
+        if (index !== -1) {
+
+          const range =
+            doc.createRange();
+
+          range.setStart(
+            node,
+            index
+          );
+
+          range.setEnd(
+            node,
+            index +
+            query.length
+          );
+
+          const cfi =
+            item.cfiFromRange(
+              range
+            );
+
+          const snippet =
+            text.substring(
+              Math.max(
+                0,
+                index - 40
+              ),
+              index + 80
+            );
 
           results.push({
 
-            cfi:
-              match.cfi || null,
-
-            href:
-              item.href,
+            cfi,
 
             excerpt:
-              match.excerpt ||
-              "Result found"
+              snippet
 
           });
 
         }
-      );
+
+      }
 
       item.unload();
 
@@ -521,23 +570,9 @@ function renderSearchResults(
 
           try {
 
-            if (
+            await rendition.display(
               result.cfi
-            ) {
-
-              await rendition.display(
-                result.cfi
-              );
-
-            }
-
-            else {
-
-              await rendition.display(
-                result.href
-              );
-
-            }
+            );
 
             searchModal.classList.remove(
               "active"
@@ -551,34 +586,23 @@ function renderSearchResults(
               error
             );
 
-            try {
-
-              await rendition.display(
-                result.href
-              );
-
-              searchModal.classList.remove(
-                "active"
-              );
-
-            }
-
-            catch (err) {
-
-              console.error(
-                err
-              );
-
-              alert(
-                "Could not open search result."
-              );
-
-            }
+            alert(
+              "Could not open result."
+            );
 
           }
 
         }
       );
+
+      searchResults.appendChild(
+        div
+      );
+
+    }
+  );
+
+}
 
       searchResults.appendChild(
         div
