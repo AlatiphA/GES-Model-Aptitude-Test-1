@@ -113,6 +113,26 @@ const footer =
     "footer"
   );
 
+const gestureLayer =
+  document.getElementById(
+    "gestureLayer"
+  );
+
+const gestureLeft =
+  document.getElementById(
+    "gestureLeft"
+  );
+
+const gestureCenter =
+  document.getElementById(
+    "gestureCenter"
+  );
+
+const gestureRight =
+  document.getElementById(
+    "gestureRight"
+  );
+
 let rendition;
 let book;
 
@@ -188,35 +208,10 @@ function startReader() {
     savedLocation || undefined
   );
 
-  rendition.hooks.content.register(
-  contents => {
-
-    contents.document.addEventListener(
-      "click",
-      e => {
-
-        const target =
-          e.target;
-
-        if (
-          target.closest("a")
-        ) {
-
-          return;
-        }
-
-        e.preventDefault();
-
-      },
-      true
-    );
-
-  }
-);
-
+  
   applyTheme();
-  setupReaderGestures();
-
+  setupGestures();
+  
   book.ready
     .then(async () => {
 
@@ -348,142 +343,101 @@ function sidebarIsOpen() {
 
 }
 
-function setupReaderGestures() {
+function setupGestures() {
 
-  let gestureBusy = false;
-
-  rendition.on(
-    "rendered",
-    section => {
-
-      const iframe =
-        viewer.querySelector(
-          "iframe"
-        );
-
-      if (!iframe) return;
-
-      const doc =
-        iframe.contentDocument;
-
-      if (!doc) return;
+  gestureLeft.addEventListener(
+    "click",
+    e => {
 
       if (
-        doc.body.dataset
-          .gestureReady
+        sidebarIsOpen()
       ) {
 
         return;
-
       }
 
-      doc.body.dataset
-        .gestureReady = "true";
+      e.stopPropagation();
+
+      rendition.prev();
+
+    }
+  );
+
+  gestureRight.addEventListener(
+    "click",
+    e => {
+
+      if (
+        sidebarIsOpen()
+      ) {
+
+        return;
+      }
+
+      e.stopPropagation();
+
+      rendition.next();
+
+    }
+  );
+
+  gestureCenter.addEventListener(
+    "click",
+    e => {
+
+      if (
+        sidebarIsOpen()
+      ) {
+
+        return;
+      }
+
+      e.stopPropagation();
+
+      toggleControls();
+
+    }
+  );
+
+  rendition.hooks.content.register(
+    contents => {
+
+      const doc =
+        contents.document;
 
       doc.addEventListener(
-        "pointerdown",
+        "mouseover",
         e => {
 
           if (
-            gestureBusy
+            e.target.closest("a")
           ) {
 
-            return;
+            gestureLayer.classList.add(
+              "gestureDisabled"
+            );
+
           }
 
-          if (
-            sidebarIsOpen()
-          ) {
+        }
+      );
 
-            return;
-          }
+      doc.addEventListener(
+        "mouseout",
+        () => {
 
-          const selection =
-            doc.defaultView
-              .getSelection()
-              .toString();
-
-          if (
-            selection.length > 0
-          ) {
-
-            return;
-          }
-
-          const target =
-            e.target;
-
-          if (
-            target.closest("a") ||
-            target.closest("button") ||
-            target.closest("img") ||
-            target.closest("input")
-          ) {
-
-            return;
-          }
-
-          e.preventDefault();
-
-          e.stopPropagation();
-
-          e.stopImmediatePropagation();
-
-          const rect =
-            iframe.getBoundingClientRect();
-
-          const tapX =
-            e.clientX -
-            rect.left;
-
-          const width =
-            rect.width;
-
-          const leftZone =
-            width * 0.30;
-
-          const rightZone =
-            width * 0.70;
-
-          gestureBusy = true;
-
-          setTimeout(
-            () => {
-
-              gestureBusy = false;
-
-            },
-            400
+          gestureLayer.classList.remove(
+            "gestureDisabled"
           );
 
-          if (
-            tapX <= leftZone
-          ) {
-
-            rendition.prev();
-
-            return;
-          }
-
-          if (
-            tapX >= rightZone
-          ) {
-
-            rendition.next();
-
-            return;
-          }
-
-          toggleControls();
-
-        },
-        true
+        }
       );
 
     }
   );
 
 }
+
   
 function applyTheme() {
 
