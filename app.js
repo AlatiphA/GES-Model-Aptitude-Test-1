@@ -113,21 +113,6 @@ const footer =
     "footer"
   );
 
-const leftZone =
-  document.getElementById(
-    "leftZone"
-  );
-
-const centerZone =
-  document.getElementById(
-    "centerZone"
-  );
-
-const rightZone =
-  document.getElementById(
-    "rightZone"
-  );
-
 let rendition;
 let book;
 
