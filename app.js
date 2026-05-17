@@ -326,67 +326,11 @@ function sidebarIsOpen() {
 
 }
 
-function setupNavigationZones() {
+function setupReaderGestures() {
 
-  function zonesDisabled() {
-
-    if (
-      sidebarIsOpen()
-    ) {
-
-      return true;
-
-    }
-
-    const iframe =
-      viewer.querySelector(
-        "iframe"
-      );
-
-    if (!iframe) {
-
-      return false;
-
-    }
-
-    try {
-
-      const active =
-        iframe.contentDocument
-          .activeElement;
-
-      if (!active) {
-
-        return false;
-
-      }
-
-      const tag =
-        active.tagName;
-
-      return (
-        tag === "A" ||
-        tag === "BUTTON" ||
-        tag === "INPUT"
-      );
-
-    }
-
-    catch {
-
-      return false;
-
-    }
-
-  }
-
-  leftZone.addEventListener(
-    "click",
-    e => {
-
-      if (
-        zonesDisabled()
-      ) return;
+  rendition.on(
+    "rendered",
+    section => {
 
       const iframe =
         viewer.querySelector(
@@ -395,94 +339,88 @@ function setupNavigationZones() {
 
       if (!iframe) return;
 
-      try {
+      const doc =
+        iframe.contentDocument;
 
-        const doc =
-          iframe.contentDocument;
+      if (!doc) return;
 
-        const selection =
-          doc.getSelection();
+      doc.addEventListener(
+        "click",
+        e => {
 
-        if (
-          selection &&
-          selection.toString()
-        ) {
+          if (
+            sidebarIsOpen()
+          ) {
 
-          return;
+            return;
 
-        }
+          }
 
-      }
+          const target =
+            e.target;
 
-      catch {}
+          const tag =
+            target.tagName;
 
-      e.stopPropagation();
+          if (
+            tag === "A" ||
+            tag === "BUTTON" ||
+            target.closest("a")
+          ) {
 
-      rendition.prev();
+            return;
 
-    }
-  );
+          }
 
-  rightZone.addEventListener(
-    "click",
-    e => {
+          const width =
+            window.innerWidth;
 
-      if (
-        zonesDisabled()
-      ) return;
+          const x =
+            e.clientX;
 
-      const iframe =
-        viewer.querySelector(
-          "iframe"
-        );
+          const leftBoundary =
+            width * 0.33;
 
-      if (!iframe) return;
+          const rightBoundary =
+            width * 0.66;
 
-      try {
+          if (
+            x < leftBoundary
+          ) {
 
-        const doc =
-          iframe.contentDocument;
+            e.preventDefault();
 
-        const selection =
-          doc.getSelection();
+            rendition.prev();
 
-        if (
-          selection &&
-          selection.toString()
-        ) {
+            return;
 
-          return;
+          }
 
-        }
+          if (
+            x > rightBoundary
+          ) {
 
-      }
+            e.preventDefault();
 
-      catch {}
+            rendition.next();
 
-      e.stopPropagation();
+            return;
 
-      rendition.next();
+          }
 
-    }
-  );
+          e.preventDefault();
 
-  centerZone.addEventListener(
-    "click",
-    e => {
+          toggleControls();
 
-      if (
-        zonesDisabled()
-      ) return;
-
-      e.stopPropagation();
-
-      toggleControls();
+        },
+        true
+      );
 
     }
   );
 
 }
-
+  
 function applyTheme() {
 
   const darkMode =
