@@ -116,11 +116,9 @@ body.dark #viewer {
 }
 
 footer {
-  position: relative;
+  height: 78px;
 
-  height: 120px;
-
-  background: #1e1e1e;
+  background: rgba(30,30,30,0.96);
 
   display: flex;
   flex-direction: column;
@@ -129,79 +127,108 @@ footer {
 
   z-index: 9999;
 
-  transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
+  backdrop-filter: blur(8px);
+
+  border-top: 1px solid #333;
 }
 
 .topFooter {
-  height: 60px;
+  height: 34px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 20px;
-
-  flex-shrink: 0;
+  padding: 0 10px;
 }
 
 .bottomFooter {
-  height: 60px;
+  height: 44px;
 
   display: flex;
   align-items: center;
   justify-content: space-around;
 
-  border-top: 1px solid #333;
-
-  flex-shrink: 0;
+  padding: 0 4px;
 }
 
 .navBtn {
-  width: 50px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
 
   border: none;
-  border-radius: 10px;
-
-  background: #444;
-
-  color: white;
-
-  font-size: 20px;
-
-  cursor: pointer;
-}
-
-#progressText {
-  color: white;
-
-  font-size: 14px;
-
-  text-align: center;
-
-  flex: 1;
-}
-
-.bottomBtn {
-  width: 44px;
-  height: 44px;
-
-  border: none;
-  border-radius: 10px;
 
   background: transparent;
 
-  color: white;
+  color: #d8d8d8;
 
-  font-size: 22px;
+  font-size: 18px;
 
   cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#progressText {
+  color: #d8d8d8;
+
+  font-size: 12px;
+
+  margin: 0 10px;
+
+  min-width: 42px;
+
+  text-align: center;
+}
+
+.progressBar {
+  flex: 1;
+
+  height: 3px;
+
+  background: #555;
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  margin: 0 10px;
+}
+
+.progressFill {
+  height: 100%;
+
+  width: 0%;
+
+  background: #4aa3ff;
+}
+
+.bottomBtn {
+  width: 32px;
+  height: 32px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #d8d8d8;
+
+  font-size: 18px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+}
+
+.bottomBtn:active,
+.navBtn:active {
+  background: rgba(255,255,255,0.08);
 }
 
 .sidebar {
