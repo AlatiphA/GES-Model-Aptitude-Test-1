@@ -191,7 +191,7 @@ function startReader() {
 
   const savedLocation =
     localStorage.getItem(
-      "epub-location"
+      "beta-epub-location"
     );
 
   rendition.display(
@@ -283,7 +283,7 @@ function startReader() {
           percent + "%";
 
         localStorage.setItem(
-          "epub-location",
+          "beta-epub-location",
           location.start.cfi
         );
 
