@@ -332,11 +332,22 @@ function autoHideControls() {
 
 }
 
+const tapLayer =
+  document.getElementById(
+    "tapLayer"
+  );
+
+let controlsVisible = true;
+
+let hideControlsTimer;
+
+/* =========================
+   SHOW CONTROLS
+========================= */
+
 function showControls() {
 
-  clearTimeout(
-    controlsTimer
-  );
+  controlsVisible = true;
 
   header.classList.remove(
     "hideControls"
@@ -346,11 +357,161 @@ function showControls() {
     "hideControls"
   );
 
-  controlsVisible = true;
-
-  autoHideControls();
+  resetControlsTimer();
 
 }
+
+/* =========================
+   HIDE CONTROLS
+========================= */
+
+function hideControls() {
+
+  if (sidebarIsOpen()) return;
+
+  if (
+    searchModal.classList.contains(
+      "active"
+    )
+  ) {
+
+    return;
+
+  }
+
+  controlsVisible = false;
+
+  header.classList.add(
+    "hideControls"
+  );
+
+  footer.classList.add(
+    "hideControls"
+  );
+
+}
+
+/* =========================
+   TOGGLE CONTROLS
+========================= */
+
+function toggleControls() {
+
+  if (controlsVisible) {
+
+    hideControls();
+
+  }
+
+  else {
+
+    showControls();
+
+  }
+
+}
+
+/* =========================
+   AUTO HIDE TIMER
+========================= */
+
+function resetControlsTimer() {
+
+  clearTimeout(
+    hideControlsTimer
+  );
+
+  hideControlsTimer =
+    setTimeout(
+      () => {
+
+        hideControls();
+
+      },
+      3000
+    );
+
+}
+
+/* =========================
+   TAP SCREEN TO RESTORE
+========================= */
+
+tapLayer.addEventListener(
+  "click",
+  () => {
+
+    if (!controlsVisible) {
+
+      showControls();
+
+    }
+
+  }
+);
+
+/* =========================
+   KEEP CONTROLS ACTIVE
+========================= */
+
+[
+  header,
+  footer,
+  sidebar,
+  searchModal
+].forEach(
+  element => {
+
+    element.addEventListener(
+      "click",
+      () => {
+
+        showControls();
+
+      }
+    );
+
+  }
+);
+
+/* =========================
+   PAGE BUTTONS
+========================= */
+
+nextPage.addEventListener(
+  "click",
+  () => {
+
+    rendition.next();
+
+    showControls();
+
+  }
+);
+
+prevPage.addEventListener(
+  "click",
+  () => {
+
+    rendition.prev();
+
+    showControls();
+
+  }
+);
+
+/* =========================
+   START TIMER
+========================= */
+
+window.addEventListener(
+  "load",
+  () => {
+
+    resetControlsTimer();
+
+  }
+);
 
 function applyTheme() {
 
