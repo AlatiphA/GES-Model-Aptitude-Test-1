@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
   <meta charset="UTF-8" />
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="
+      width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no
+    "
   />
 
   <title>
@@ -34,12 +40,15 @@
 
 <div class="app">
 
-  <header>
+  <!-- HEADER -->
+
+  <header id="header">
 
     <button
       id="menuBtn"
       class="iconBtn"
       aria-label="Open Menu"
+      title="Chapters"
     >
       ☰
     </button>
@@ -52,11 +61,14 @@
       id="themeBtn"
       class="iconBtn"
       aria-label="Toggle Theme"
+      title="Theme"
     >
       ☀
     </button>
 
   </header>
+
+  <!-- SIDEBAR -->
 
   <aside
     id="sidebar"
@@ -79,100 +91,127 @@
 
   </aside>
 
-  <main>
+  <!-- READER -->
 
-  <div id="viewer"></div>
+  <main id="main">
 
-</div>
+    <div id="viewer"></div>
+
+    <!-- TAP LAYER
+         Used to restore controls
+         after auto-hide
+    -->
+
+    <div id="tapLayer"></div>
 
   </main>
 
-  <footer>
+  <!-- FOOTER -->
 
-  <div class="topFooter">
+  <footer id="footer">
 
-    <button
-      id="prevPage"
-      class="navBtn"
-    >
-      ❮
-    </button>
+    <!-- TOP FOOTER -->
 
-    <div class="progressBar">
+    <div class="topFooter">
 
-      <div
-        id="progressFill"
-        class="progressFill"
-      ></div>
+      <button
+        id="prevPage"
+        class="navBtn"
+        aria-label="Previous Page"
+        title="Previous"
+      >
+        ❮
+      </button>
+
+      <div class="progressBar">
+
+        <div
+          id="progressFill"
+          class="progressFill"
+        ></div>
+
+      </div>
+
+      <span id="progressText">
+        0%
+      </span>
+
+      <button
+        id="nextPage"
+        class="navBtn"
+        aria-label="Next Page"
+        title="Next"
+      >
+        ❯
+      </button>
 
     </div>
 
-    <span id="progressText">
-      0%
-    </span>
+    <!-- BOTTOM FOOTER -->
 
-    <button
-      id="nextPage"
-      class="navBtn"
-    >
-      ❯
-    </button>
+    <div class="bottomFooter">
 
-  </div>
+      <button
+        id="bottomThemeBtn"
+        class="bottomBtn"
+        aria-label="Theme"
+        title="Theme"
+      >
+        ☀
+      </button>
 
-  <div class="bottomFooter">
+      <button
+        id="bottomDecreaseFont"
+        class="bottomBtn"
+        aria-label="Smaller Font"
+        title="Smaller Font"
+      >
+        A-
+      </button>
 
-    <button
-      id="bottomThemeBtn"
-      class="bottomBtn"
-      aria-label="Theme"
-    >
-      ☀
-    </button>
+      <button
+        id="searchBtn"
+        class="bottomBtn"
+        aria-label="Search"
+        title="Search"
+      >
+        🔍
+      </button>
 
-    <button
-      id="bottomDecreaseFont"
-      class="bottomBtn"
-      aria-label="Smaller Font"
-    >
-      A-
-    </button>
+      <button
+        id="bottomMenuBtn"
+        class="bottomBtn"
+        aria-label="Chapters"
+        title="Chapters"
+      >
+        ☰
+      </button>
 
-    <button
-      id="searchBtn"
-      class="bottomBtn"
-      aria-label="Search"
-    >
-      🔍
-    </button>
-    
-    <button
-      id="bottomMenuBtn"
-      class="bottomBtn"
-      aria-label="Chapters"
-    >
-      ☰
-    </button>
+      <button
+        id="bottomIncreaseFont"
+        class="bottomBtn"
+        aria-label="Larger Font"
+        title="Larger Font"
+      >
+        A+
+      </button>
 
-    <button
-      id="bottomIncreaseFont"
-      class="bottomBtn"
-      aria-label="Larger Font"
-    >
-      A+
-    </button>
+      <button
+        id="closeAppBtn"
+        class="bottomBtn"
+        aria-label="Close"
+        title="Close"
+      >
+        ✕
+      </button>
 
-    <button
-      id="closeAppBtn"
-      class="bottomBtn"
-      aria-label="Close"
-    >
-      ✕
-    </button>
+    </div>
 
-  </div>
+  </footer>
 
-</footer>
+</div>
+
+<!-- SEARCH MODAL -->
 
 <div id="searchModal">
 
@@ -182,9 +221,13 @@
       type="text"
       id="searchInput"
       placeholder="Search book..."
+      autocomplete="off"
     />
 
-    <button id="closeSearch">
+    <button
+      id="closeSearch"
+      aria-label="Close Search"
+    >
       ✕
     </button>
 
@@ -192,13 +235,15 @@
 
   <div id="searchResults"></div>
 
-  </div>
-
 </div>
+
+<!-- EPUB LIBRARIES -->
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+
+<!-- APP -->
 
 <script src="./app.js"></script>
 
