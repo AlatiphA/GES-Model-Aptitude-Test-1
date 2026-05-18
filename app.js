@@ -113,12 +113,13 @@ const footer =
     "footer"
   );
 
-
 let rendition;
 let book;
 
 let controlsVisible =
   true;
+
+let controlsTimer;
 
 let fontSize =
   Number(
@@ -189,9 +190,14 @@ function startReader() {
     savedLocation || undefined
   );
 
-  
+  rendition.themes.fontSize(
+    fontSize + "%"
+  );
+
   applyTheme();
-  
+
+  autoHideControls();
+
   book.ready
     .then(async () => {
 
@@ -263,8 +269,14 @@ function startReader() {
         progressText.textContent =
           percent + "%";
 
-        progressFill.style.width =
-          percent + "%";
+        if (
+          progressFill
+        ) {
+
+          progressFill.style.width =
+            percent + "%";
+
+        }
 
         localStorage.setItem(
           "epub-location",
@@ -284,47 +296,62 @@ function startReader() {
 
 }
 
-function toggleControls() {
+function autoHideControls() {
 
-  controlsVisible =
-    !controlsVisible;
-
-  if (controlsVisible) {
-
-    header.classList.remove(
-      "hideControls"
-    );
-
-    footer.classList.remove(
-      "hideControls"
-    );
-
-  }
-
-  else {
-
-    header.classList.add(
-      "hideControls"
-    );
-
-    footer.classList.add(
-      "hideControls"
-    );
-
-  }
-
-}
-
-function sidebarIsOpen() {
-
-  return sidebar.classList.contains(
-    "active"
+  clearTimeout(
+    controlsTimer
   );
 
+  header.classList.remove(
+    "hideControls"
+  );
+
+  footer.classList.remove(
+    "hideControls"
+  );
+
+  controlsVisible = true;
+
+  controlsTimer =
+    setTimeout(
+      () => {
+
+        header.classList.add(
+          "hideControls"
+        );
+
+        footer.classList.add(
+          "hideControls"
+        );
+
+        controlsVisible = false;
+
+      },
+      2500
+    );
+
 }
 
+function showControls() {
 
-  
+  clearTimeout(
+    controlsTimer
+  );
+
+  header.classList.remove(
+    "hideControls"
+  );
+
+  footer.classList.remove(
+    "hideControls"
+  );
+
+  controlsVisible = true;
+
+  autoHideControls();
+
+}
+
 function applyTheme() {
 
   const darkMode =
@@ -550,6 +577,16 @@ function renderSearchResults(
 
 }
 
+document.addEventListener(
+  "mousemove",
+  autoHideControls
+);
+
+document.addEventListener(
+  "touchstart",
+  autoHideControls
+);
+
 menuBtn.addEventListener(
   "click",
   () => {
@@ -557,6 +594,8 @@ menuBtn.addEventListener(
     sidebar.classList.toggle(
       "active"
     );
+
+    showControls();
 
   }
 );
@@ -577,6 +616,8 @@ themeBtn.addEventListener(
 
     applyTheme();
 
+    showControls();
+
   }
 );
 
@@ -586,6 +627,8 @@ nextPage.addEventListener(
 
     rendition.next();
 
+    showControls();
+
   }
 );
 
@@ -594,6 +637,8 @@ prevPage.addEventListener(
   () => {
 
     rendition.prev();
+
+    showControls();
 
   }
 );
@@ -612,6 +657,8 @@ increaseFont.addEventListener(
       "fontSize",
       fontSize
     );
+
+    showControls();
 
   }
 );
@@ -633,6 +680,8 @@ decreaseFont.addEventListener(
       "fontSize",
       fontSize
     );
+
+    showControls();
 
   }
 );
@@ -692,6 +741,8 @@ searchBtn.addEventListener(
 
     searchInput.focus();
 
+    showControls();
+
   }
 );
 
@@ -702,6 +753,8 @@ closeSearch.addEventListener(
     searchModal.classList.remove(
       "active"
     );
+
+    showControls();
 
   }
 );
