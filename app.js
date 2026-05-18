@@ -128,6 +128,10 @@ let fontSize =
     )
   ) || 100;
 
+/* =========================
+   LOAD BOOK
+========================= */
+
 async function loadBook() {
 
   try {
@@ -165,6 +169,10 @@ async function loadBook() {
   }
 
 }
+
+/* =========================
+   START READER
+========================= */
 
 function startReader() {
 
@@ -233,6 +241,8 @@ function startReader() {
                 "active"
               );
 
+              showControls();
+
             }
           );
 
@@ -269,14 +279,8 @@ function startReader() {
         progressText.textContent =
           percent + "%";
 
-        if (
-          progressFill
-        ) {
-
-          progressFill.style.width =
-            percent + "%";
-
-        }
+        progressFill.style.width =
+          percent + "%";
 
         localStorage.setItem(
           "epub-location",
@@ -295,7 +299,6 @@ function startReader() {
   );
 
 }
-
 
 /* =========================
    AUTO HIDE CONTROLS
@@ -322,7 +325,9 @@ function autoHideControls() {
       () => {
 
         if (
-          sidebarIsOpen()
+          sidebar.classList.contains(
+            "active"
+          )
         ) {
 
           return;
@@ -380,7 +385,7 @@ function showControls() {
 }
 
 /* =========================
-   TAP SCREEN TO RESTORE
+   TAP VIEWER TO RESTORE
 ========================= */
 
 viewer.addEventListener(
@@ -423,17 +428,8 @@ viewer.addEventListener(
 );
 
 /* =========================
-   START TIMER
+   THEME
 ========================= */
-
-window.addEventListener(
-  "load",
-  () => {
-
-    autoHideControls();
-
-  }
-);
 
 function applyTheme() {
 
@@ -477,6 +473,10 @@ function applyTheme() {
   }
 
 }
+
+/* =========================
+   SEARCH
+========================= */
 
 async function searchBook(
   query
@@ -634,6 +634,8 @@ function renderSearchResults(
               "active"
             );
 
+            showControls();
+
           }
 
           catch (error) {
@@ -660,6 +662,10 @@ function renderSearchResults(
 
 }
 
+/* =========================
+   USER ACTIVITY
+========================= */
+
 document.addEventListener(
   "mousemove",
   autoHideControls
@@ -669,6 +675,10 @@ document.addEventListener(
   "touchstart",
   autoHideControls
 );
+
+/* =========================
+   BUTTON EVENTS
+========================= */
 
 menuBtn.addEventListener(
   "click",
@@ -809,7 +819,7 @@ closeAppBtn.addEventListener(
   "click",
   () => {
 
-    window.close();
+    history.back();
 
   }
 );
@@ -863,6 +873,10 @@ searchInput.addEventListener(
   }
 );
 
+/* =========================
+   SERVICE WORKER
+========================= */
+
 if (
   "serviceWorker" in navigator
 ) {
@@ -891,5 +905,9 @@ if (
   );
 
 }
+
+/* =========================
+   INIT
+========================= */
 
 loadBook();
