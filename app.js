@@ -890,7 +890,7 @@ if (
         await navigator
           .serviceWorker
           .register(
-            "./sw.js"
+            "./sw-beta.js"
           );
 
       }
