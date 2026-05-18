@@ -724,12 +724,12 @@ menuBtn.addEventListener(
 
     menuBtn.textContent =
       isOpen
-        ? "⬅"
+        ? "⮌"
         : "☰";
 
     bottomMenuBtn.textContent =
       isOpen
-        ? "⬅"
+        ? "⮌"
         : "☰";
 
     showControls();
