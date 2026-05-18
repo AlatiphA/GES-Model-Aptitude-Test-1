@@ -202,8 +202,10 @@ function startReader() {
     fontSize + "%"
   );
 
-  applyTheme();
+  menuBtn.textContent = "☰";
+  bottomMenuBtn.textContent = "☰";
 
+  applyTheme();
   autoHideControls();
 
   book.ready
@@ -724,12 +726,12 @@ menuBtn.addEventListener(
 
     menuBtn.textContent =
       isOpen
-        ? "⮌"
+        ? "☰"
         : "☰";
 
     bottomMenuBtn.textContent =
       isOpen
-        ? "⮌"
+        ? "☰"
         : "☰";
 
     showControls();
