@@ -296,6 +296,19 @@ function startReader() {
 
 }
 
+let controlsVisible = true;
+
+let controlsTimer;
+
+const tapLayer =
+  document.getElementById(
+    "tapLayer"
+  );
+
+/* =========================
+   AUTO HIDE CONTROLS
+========================= */
+
 function autoHideControls() {
 
   clearTimeout(
@@ -316,6 +329,24 @@ function autoHideControls() {
     setTimeout(
       () => {
 
+        if (
+          sidebarIsOpen()
+        ) {
+
+          return;
+
+        }
+
+        if (
+          searchModal.classList.contains(
+            "active"
+          )
+        ) {
+
+          return;
+
+        }
+
         header.classList.add(
           "hideControls"
         );
@@ -331,6 +362,10 @@ function autoHideControls() {
     );
 
 }
+
+/* =========================
+   SHOW CONTROLS
+========================= */
 
 function showControls() {
 
@@ -351,6 +386,62 @@ function showControls() {
   autoHideControls();
 
 }
+
+/* =========================
+   TAP SCREEN TO RESTORE
+========================= */
+
+tapLayer.addEventListener(
+  "click",
+  () => {
+
+    if (
+      !controlsVisible
+    ) {
+
+      showControls();
+
+    }
+
+  }
+);
+
+/* =========================
+   KEEP CONTROLS ACTIVE
+========================= */
+
+[
+  header,
+  footer,
+  sidebar,
+  searchModal
+].forEach(
+  element => {
+
+    element.addEventListener(
+      "click",
+      () => {
+
+        showControls();
+
+      }
+    );
+
+  }
+);
+
+/* =========================
+   START TIMER
+========================= */
+
+window.addEventListener(
+  "load",
+  () => {
+
+    autoHideControls();
+
+  }
+);
 
 function applyTheme() {
 
