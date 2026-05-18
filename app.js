@@ -439,48 +439,67 @@ function applyTheme() {
     ) === "true";
 
   document.body.classList.toggle(
-  "dark",
-  darkMode
-);
+    "dark",
+    darkMode
+  );
 
-themeBtn.textContent =
-  darkMode
-    ? "🌙"
-    : "☀";
+  themeBtn.textContent =
+    darkMode
+      ? "🌙"
+      : "☀";
 
-bottomThemeBtn.textContent =
-  darkMode
-    ? "🌙"
-    : "☀";
+  bottomThemeBtn.textContent =
+    darkMode
+      ? "🌙"
+      : "☀";
 
-  if (rendition) {
+  if (!rendition) return;
 
-    rendition.themes.default({
-
+  rendition.themes.register(
+    "light",
+    {
       body: {
-
-        background:
-          darkMode
-            ? "#111"
-            : "#fff",
-
-        color:
-          darkMode
-            ? "#fff"
-            : "#000",
-
+        background: "#ffffff",
+        color: "#111111",
         padding: "20px",
-
         "line-height": "1.7",
-
         "font-family":
           "Arial, sans-serif"
+      },
 
+      a: {
+        color: "#1565c0"
       }
+    }
+  );
 
-    });
+  rendition.themes.register(
+    "dark",
+    {
+      body: {
+        background: "#111111",
+        color: "#ffffff",
+        padding: "20px",
+        "line-height": "1.7",
+        "font-family":
+          "Arial, sans-serif"
+      },
 
-  }
+      a: {
+        color: "#4dabff"
+      }
+    }
+  );
+
+  rendition.themes.select(
+    darkMode
+      ? "dark"
+      : "light"
+  );
+
+  rendition.themes.fontSize(
+    fontSize + "%"
+  );
 
 }
 
@@ -724,13 +743,11 @@ themeBtn.addEventListener(
   }
 );
 
-nextPage.addEventListener(
+bottomThemeBtn.addEventListener(
   "click",
   () => {
 
-    rendition.next();
-
-    showControls();
+    themeBtn.click();
 
   }
 );
