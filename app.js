@@ -829,7 +829,7 @@ closeAppBtn.addEventListener(
   "click",
   () => {
 
-    history.back();
+    window.close();
 
   }
 );
