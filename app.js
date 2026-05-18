@@ -439,9 +439,19 @@ function applyTheme() {
     ) === "true";
 
   document.body.classList.toggle(
-    "dark",
-    darkMode
-  );
+  "dark",
+  darkMode
+);
+
+themeBtn.textContent =
+  darkMode
+    ? "🌙"
+    : "☀";
+
+bottomThemeBtn.textContent =
+  darkMode
+    ? "🌙"
+    : "☀";
 
   if (rendition) {
 
@@ -699,12 +709,12 @@ themeBtn.addEventListener(
 
     const darkMode =
       localStorage.getItem(
-        "darkMode"
+        "beta-darkMode"
       ) === "true";
 
     localStorage.setItem(
-      "darkMode",
-      !darkMode
+      "beta-darkMode",
+      (!darkMode).toString()
     );
 
     applyTheme();
@@ -747,7 +757,7 @@ increaseFont.addEventListener(
     );
 
     localStorage.setItem(
-      "fontSize",
+      "beta-fontSize",
       fontSize
     );
 
@@ -770,7 +780,7 @@ decreaseFont.addEventListener(
     );
 
     localStorage.setItem(
-      "fontSize",
+      "beta-fontSize",
       fontSize
     );
 
