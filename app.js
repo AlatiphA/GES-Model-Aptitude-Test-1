@@ -183,8 +183,8 @@ function startReader() {
         width: "100%",
         height: "100%",
         spread: "none",
-        manager: "default",
         flow: "paginated",
+        manager: "default",
         snap: true
       }
     );
@@ -198,14 +198,50 @@ function startReader() {
     savedLocation || undefined
   );
 
+  rendition.themes.register(
+    "light",
+    {
+      body: {
+        background: "#ffffff",
+        color: "#111111",
+        padding: "20px",
+        "line-height": "1.7",
+        "font-family":
+          "Arial, sans-serif"
+      },
+
+      a: {
+        color: "#1565c0"
+      }
+    }
+  );
+
+  rendition.themes.register(
+    "dark",
+    {
+      body: {
+        background: "#111111",
+        color: "#ffffff",
+        padding: "20px",
+        "line-height": "1.7",
+        "font-family":
+          "Arial, sans-serif"
+      },
+
+      a: {
+        color: "#4dabff"
+      }
+    }
+  );
+
   rendition.themes.fontSize(
     fontSize + "%"
   );
 
-  menuBtn.textContent = "☰";
-  bottomMenuBtn.textContent = "☰";
-
   applyTheme();
+
+  setupGestures();
+
   autoHideControls();
 
   book.ready
@@ -213,10 +249,7 @@ function startReader() {
 
       toc.innerHTML = "";
 
-      const navigation =
-        book.navigation;
-
-      navigation.toc.forEach(
+      book.navigation.toc.forEach(
         chapter => {
 
           const link =
@@ -224,10 +257,10 @@ function startReader() {
               "a"
             );
 
+          link.href = "#";
+
           link.textContent =
             chapter.label;
-
-          link.href = "#";
 
           link.addEventListener(
             "click",
@@ -303,7 +336,45 @@ function startReader() {
 }
 
 /* =========================
-   AUTO HIDE CONTROLS
+   THEME
+========================= */
+
+function applyTheme() {
+
+  const darkMode =
+    localStorage.getItem(
+      "beta-darkMode"
+    ) === "true";
+
+  document.body.classList.toggle(
+    "dark",
+    darkMode
+  );
+
+  rendition.themes.select(
+    darkMode
+      ? "dark"
+      : "light"
+  );
+
+  rendition.themes.fontSize(
+    fontSize + "%"
+  );
+
+  themeBtn.textContent =
+    darkMode
+      ? "🌙"
+      : "☀";
+
+  bottomThemeBtn.textContent =
+    darkMode
+      ? "🌙"
+      : "☀";
+
+}
+
+/* =========================
+   CONTROLS
 ========================= */
 
 function autoHideControls() {
@@ -362,10 +433,6 @@ function autoHideControls() {
 
 }
 
-/* =========================
-   SHOW CONTROLS
-========================= */
-
 function showControls() {
 
   clearTimeout(
@@ -387,121 +454,107 @@ function showControls() {
 }
 
 /* =========================
-   TAP VIEWER TO RESTORE
+   GESTURES
 ========================= */
 
-viewer.addEventListener(
-  "click",
-  () => {
+function setupGestures() {
 
-    if (
-      !controlsVisible
-    ) {
+  rendition.on(
+    "rendered",
+    () => {
 
-      showControls();
+      const iframe =
+        viewer.querySelector(
+          "iframe"
+        );
 
-    }
+      if (!iframe) return;
 
-  }
-);
+      const doc =
+        iframe.contentDocument;
 
-/* =========================
-   KEEP CONTROLS ACTIVE
-========================= */
+      if (!doc) return;
 
-[
-  header,
-  footer,
-  sidebar,
-  searchModal
-].forEach(
-  element => {
+      if (
+        doc.body.dataset
+          .gestureReady
+      ) {
 
-    element.addEventListener(
-      "click",
-      () => {
-
-        showControls();
+        return;
 
       }
-    );
 
-  }
-);
+      doc.body.dataset
+        .gestureReady =
+        "true";
 
+      let startX = 0;
 
-/* =========================
-   THEME
-========================= */
+      doc.addEventListener(
+        "touchstart",
+        e => {
 
-function applyTheme() {
+          startX =
+            e.touches[0].clientX;
 
-  const darkMode =
-    localStorage.getItem(
-      "beta-darkMode"
-    ) === "true";
+        },
+        {
+          passive: true
+        }
+      );
 
-  document.body.classList.toggle(
-    "dark",
-    darkMode
-  );
+      doc.addEventListener(
+        "touchend",
+        e => {
 
-  themeBtn.textContent =
-    darkMode
-      ? "🌙"
-      : "☀";
+          const target =
+            e.target;
 
-  bottomThemeBtn.textContent =
-    darkMode
-      ? "🌙"
-      : "☀";
+          if (
+            target.closest("a")
+          ) {
 
-  if (!rendition) return;
+            return;
 
-  rendition.themes.register(
-    "light",
-    {
-      body: {
-        background: "#ffffff",
-        color: "#111111",
-        padding: "20px",
-        "line-height": "1.7",
-        "font-family":
-          "Arial, sans-serif"
-      },
+          }
 
-      a: {
-        color: "#1565c0"
-      }
+          const endX =
+            e.changedTouches[0]
+              .clientX;
+
+          const diff =
+            endX - startX;
+
+          if (
+            Math.abs(diff) < 60
+          ) {
+
+            showControls();
+            return;
+
+          }
+
+          if (diff > 0) {
+
+            rendition.prev();
+
+          }
+
+          else {
+
+            rendition.next();
+
+          }
+
+          showControls();
+
+        },
+        {
+          passive: true
+        }
+      );
+
     }
-  );
-
-  rendition.themes.register(
-    "dark",
-    {
-      body: {
-        background: "#111111",
-        color: "#ffffff",
-        padding: "20px",
-        "line-height": "1.7",
-        "font-family":
-          "Arial, sans-serif"
-      },
-
-      a: {
-        color: "#4dabff"
-      }
-    }
-  );
-
-  rendition.themes.select(
-    darkMode
-      ? "dark"
-      : "light"
-  );
-
-  rendition.themes.fontSize(
-    fontSize + "%"
   );
 
 }
@@ -547,16 +600,12 @@ async function searchBook(
         const text =
           node.textContent;
 
-        const lowerText =
-          text.toLowerCase();
-
-        const lowerQuery =
-          query.toLowerCase();
-
         const index =
-          lowerText.indexOf(
-            lowerQuery
-          );
+          text
+            .toLowerCase()
+            .indexOf(
+              query.toLowerCase()
+            );
 
         if (index !== -1) {
 
@@ -574,26 +623,21 @@ async function searchBook(
             query.length
           );
 
-          const cfi =
-            item.cfiFromRange(
-              range
-            );
-
-          const snippet =
-            text.substring(
-              Math.max(
-                0,
-                index - 40
-              ),
-              index + 80
-            );
-
           results.push({
 
-            cfi,
+            cfi:
+              item.cfiFromRange(
+                range
+              ),
 
             excerpt:
-              snippet
+              text.substring(
+                Math.max(
+                  0,
+                  index - 40
+                ),
+                index + 80
+              )
 
           });
 
@@ -656,31 +700,15 @@ function renderSearchResults(
         "click",
         async () => {
 
-          try {
+          await rendition.display(
+            result.cfi
+          );
 
-            await rendition.display(
-              result.cfi
-            );
+          searchModal.classList.remove(
+            "active"
+          );
 
-            searchModal.classList.remove(
-              "active"
-            );
-
-            showControls();
-
-          }
-
-          catch (error) {
-
-            console.error(
-              error
-            );
-
-            alert(
-              "Could not open result."
-            );
-
-          }
+          showControls();
 
         }
       );
@@ -695,7 +723,7 @@ function renderSearchResults(
 }
 
 /* =========================
-   USER ACTIVITY
+   EVENTS
 ========================= */
 
 document.addEventListener(
@@ -708,9 +736,10 @@ document.addEventListener(
   autoHideControls
 );
 
-/* =========================
-   BUTTON EVENTS
-========================= */
+viewer.addEventListener(
+  "click",
+  showControls
+);
 
 menuBtn.addEventListener(
   "click",
@@ -720,22 +749,16 @@ menuBtn.addEventListener(
       "active"
     );
 
-    const isOpen =
-      sidebar.classList.contains(
-        "active"
-      );
-
-    menuBtn.textContent =
-      isOpen
-        ? "☰"
-        : "☰";
-
-    bottomMenuBtn.textContent =
-      isOpen
-        ? "☰"
-        : "☰";
-
     showControls();
+
+  }
+);
+
+bottomMenuBtn.addEventListener(
+  "click",
+  () => {
+
+    menuBtn.click();
 
   }
 );
@@ -769,7 +792,6 @@ bottomThemeBtn.addEventListener(
 
   }
 );
-
 
 prevPage.addEventListener(
   "click",
@@ -836,24 +858,6 @@ decreaseFont.addEventListener(
   }
 );
 
-bottomThemeBtn.addEventListener(
-  "click",
-  () => {
-
-    themeBtn.click();
-
-  }
-);
-
-bottomDecreaseFont.addEventListener(
-  "click",
-  () => {
-
-    decreaseFont.click();
-
-  }
-);
-
 bottomIncreaseFont.addEventListener(
   "click",
   () => {
@@ -863,20 +867,11 @@ bottomIncreaseFont.addEventListener(
   }
 );
 
-bottomMenuBtn.addEventListener(
+bottomDecreaseFont.addEventListener(
   "click",
   () => {
 
-    menuBtn.click();
-
-  }
-);
-
-closeAppBtn.addEventListener(
-  "click",
-  () => {
-
-    window.close();
+    decreaseFont.click();
 
   }
 );
@@ -923,9 +918,20 @@ searchInput.addEventListener(
       if (!query)
         return;
 
-      searchBook(query);
+      searchBook(
+        query
+      );
 
     }
+
+  }
+);
+
+closeAppBtn.addEventListener(
+  "click",
+  () => {
+
+    history.back();
 
   }
 );
