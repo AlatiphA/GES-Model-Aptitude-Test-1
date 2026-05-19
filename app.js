@@ -780,6 +780,17 @@ prevPage.addEventListener(
   }
 );
 
+nextPage.addEventListener(
+  "click",
+  () => {
+
+    rendition.next();
+
+    showControls();
+
+  }
+);
+
 increaseFont.addEventListener(
   "click",
   () => {
