@@ -234,13 +234,13 @@ function startReader() {
     }
   );
 
-  setupLinkHandlers(); 
-
   rendition.themes.fontSize(
     fontSize + "%"
   );
 
   initThemes();
+
+  setupLinkHandlers();
 
   setupGestures();
 
@@ -338,202 +338,97 @@ function startReader() {
 }
 
 /* =========================
-   THEME SETUP
-========================= */
-
-function initThemes() {
-
-  if (!rendition) return;
-
-  rendition.themes.register(
-    "light",
-    {
-      body: {
-        background: "#ffffff",
-        color: "#111111",
-        padding: "20px 30px",
-        "line-height": "1.7",
-        "font-family":
-          "Arial, sans-serif"
-      },
-
-      a: {
-        color: "#1565c0"
-      }
-    }
-  );
-
-  rendition.themes.register(
-    "dark",
-    {
-      body: {
-        background: "#111111",
-        color: "#ffffff",
-        padding: "20px 30px",
-        "line-height": "1.7",
-        "font-family":
-          "Arial, sans-serif"
-      },
-
-      a: {
-        color: "#4dabff"
-      }
-    }
-  );
-
-  rendition.themes.fontSize(
-    fontSize + "%"
-  );
-
-  applyTheme();
-
-}
-
-/* =========================
-   APPLY THEME
+   THEME
 ========================= */
 
 function applyTheme() {
+  const isDark = localStorage.getItem("beta-darkMode") === "true";
 
-  const isDark =
-    localStorage.getItem(
-      "beta-darkMode"
-    ) === "true";
+  // Update UI (sidebar, header, footer, etc.)
+  document.body.classList.toggle("dark", isDark);
 
-  document.body.classList.toggle(
-    "dark",
-    isDark
-  );
-
+  // Update button icons (fixed encoding)
   const sun = "☀️";
   const moon = "🌙";
-
-  themeBtn.textContent =
-    isDark
-      ? moon
-      : sun;
-
-  bottomThemeBtn.textContent =
-    isDark
-      ? moon
-      : sun;
+  themeBtn.textContent = isDark ? moon : sun;
+  bottomThemeBtn.textContent = isDark ? moon : sun;
 
   if (!rendition) return;
 
-  rendition.themes.select(
-    isDark
-      ? "dark"
-      : "light"
-  );
+  // Apply epub.js theme
+  rendition.themes.select(isDark ? "dark" : "light");
 
+  // Font size should only be set once (moved out of here)
+  // rendition.themes.fontSize(fontSize + "%");  ← remove from here
+}
+
+function initThemes() {
+  rendition.themes.register("light", {
+    body: {
+      background: "#ffffff",
+      color: "#111111",
+      padding: "20px 30px",
+      "line-height": "1.7",
+      "font-family": "Arial, sans-serif"
+    },
+    a: { color: "#1565c0" }
+  });
+
+  rendition.themes.register("dark", {
+    body: {
+      background: "#111111",
+      color: "#ffffff",
+      padding: "20px 30px",
+      "line-height": "1.7",
+      "font-family": "Arial, sans-serif"
+    },
+    a: { color: "#4dabff" }
+  });
+
+  // Initial apply
+  applyTheme();
 }
 
 
 /* =========================
-   HANDLE INTERNAL LINKS
+   HANDLE INTERNAL LINKS & FOOTNOTES
 ========================= */
 
 function setupLinkHandlers() {
+  rendition.on("rendered", (section) => {
+    const iframe = viewer.querySelector("iframe");
+    if (!iframe) return;
 
-  rendition.on(
-    "rendered",
-    () => {
+    const doc = iframe.contentDocument;
+    if (!doc) return;
 
-      const iframe =
-        viewer.querySelector(
-          "iframe"
-        );
+    // Prevent duplicate handlers
+    if (doc.body.dataset.linksReady === "true") return;
+    doc.body.dataset.linksReady = "true";
 
-      if (!iframe) return;
+    doc.addEventListener("click", (e) => {
+      const link = e.target.closest("a");
+      if (!link) return;
 
-      const doc =
-        iframe.contentDocument;
+      const href = link.getAttribute("href");
+      if (!href) return;
 
-      if (!doc) return;
-
-      /* PREVENT DUPLICATES */
-
-      if (
-        doc.body.dataset.linksReady ===
-        "true"
-      ) {
-
-        return;
-
+      // Skip external links (http/https)
+      if (href.startsWith("http://") || href.startsWith("https://")) {
+        return; // let browser handle (opens in new tab)
       }
 
-      doc.body.dataset.linksReady =
-        "true";
+      // Internal link → let epub.js handle it
+      e.preventDefault();
+      e.stopPropagation();
 
-      doc.addEventListener(
-        "click",
-        async e => {
-
-          const link =
-            e.target.closest("a");
-
-          if (!link) return;
-
-          const href =
-            link.getAttribute(
-              "href"
-            );
-
-          if (!href) return;
-
-          /* EXTERNAL LINKS */
-
-          if (
-            href.startsWith(
-              "http://"
-            ) ||
-
-            href.startsWith(
-              "https://"
-            )
-          ) {
-
-            window.open(
-              href,
-              "_blank"
-            );
-
-            return;
-
-          }
-
-          /* INTERNAL EPUB LINKS */
-
-          e.preventDefault();
-
-          e.stopPropagation();
-
-          try {
-
-            await rendition.display(
-              href
-            );
-
-            showControls();
-
-          }
-
-          catch (error) {
-
-            console.error(
-              "Link navigation failed:",
-              error
-            );
-
-          }
-
-        },
-        true
-      );
-
-    }
-  );
-
+      rendition.display(href).then(() => {
+        showControls();
+      }).catch(err => {
+        console.warn("Failed to navigate to link:", href, err);
+      });
+    }, true); // Use capture phase
+  });
 }
 
 
@@ -617,111 +512,62 @@ function showControls() {
 
 }
 
+
 /* =========================
-   GESTURES
+   GESTURES (Swipe Next/Prev)
 ========================= */
 
 function setupGestures() {
+  let startX = 0;
 
-  rendition.on(
-    "rendered",
-    () => {
+  rendition.on("rendered", () => {
+    const iframe = viewer.querySelector("iframe");
+    if (!iframe?.contentDocument) return;
 
-      const iframe =
-        viewer.querySelector(
-          "iframe"
-        );
+    const doc = iframe.contentDocument;
 
-      if (!iframe) return;
+    // Prevent attaching multiple times to the same document
+    if (doc.body.dataset.gestureReady === "true") return;
+    doc.body.dataset.gestureReady = "true";
 
-      const doc =
-        iframe.contentDocument;
+    // Touch Start
+    doc.addEventListener("touchstart", e => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
 
-      if (!doc) return;
+    // Touch End - Swipe Detection
+    doc.addEventListener("touchend", e => {
+      if (!e.changedTouches || e.changedTouches.length === 0) return;
 
-      if (
-        doc.body.dataset
-          .gestureReady
-      ) {
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
 
-        return;
-
+      const link = e.target.closest("a");
+      if (link) {
+        return; // Let the link handler deal with it
       }
 
-      doc.body.dataset
-        .gestureReady =
-        "true";
+      // Small movement = just show controls (tap)
+      if (Math.abs(diff) < 60) {
+        showControls();
+        return;
+      }
 
-      let startX = 0;
+      // Swipe Left → Next
+      if (diff < -60) {
+        rendition.next();
+      }
+      // Swipe Right → Previous
+      else if (diff > 60) {
+        rendition.prev();
+      }
 
-      doc.addEventListener(
-        "touchstart",
-        e => {
-
-          startX =
-            e.touches[0].clientX;
-
-        },
-        {
-          passive: true
-        }
-      );
-
-      doc.addEventListener(
-        "touchend",
-        e => {
-
-          const target =
-            e.target;
-
-          if (
-            target.closest("a")
-          ) {
-
-            return;
-
-          }
-
-          const endX =
-            e.changedTouches[0]
-              .clientX;
-
-          const diff =
-            endX - startX;
-
-          if (
-            Math.abs(diff) < 60
-          ) {
-
-            showControls();
-            return;
-
-          }
-
-          if (diff > 0) {
-
-            rendition.prev();
-
-          }
-
-          else {
-
-            rendition.next();
-
-          }
-
-          showControls();
-
-        },
-        {
-          passive: true
-        }
-      );
-
-    }
-  );
-
+      showControls();
+    }, { passive: true });
+  });
 }
+
+
 
 /* =========================
    SEARCH
@@ -927,26 +773,12 @@ bottomMenuBtn.addEventListener(
   }
 );
 
-themeBtn.addEventListener(
-  "click",
-  () => {
-
-    const darkMode =
-      localStorage.getItem(
-        "beta-darkMode"
-      ) === "true";
-
-    localStorage.setItem(
-      "beta-darkMode",
-      (!darkMode).toString()
-    );
-
-    applyTheme();
-
-    showControls();
-
-  }
-);
+themeBtn.addEventListener("click", () => {
+  const isDark = localStorage.getItem("beta-darkMode") === "true";
+  localStorage.setItem("beta-darkMode", (!isDark).toString());
+  applyTheme();
+  showControls();
+});
 
 bottomThemeBtn.addEventListener(
   "click",
