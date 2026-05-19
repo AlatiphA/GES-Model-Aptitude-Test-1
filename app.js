@@ -1,433 +1,436 @@
 const viewer =
-  document.getElementById(
-    "viewer"
-  );
+document.getElementById(
+"viewer"
+);
 
 const toc =
-  document.getElementById(
-    "toc"
-  );
+document.getElementById(
+"toc"
+);
 
 const progressText =
-  document.getElementById(
-    "progressText"
-  );
+document.getElementById(
+"progressText"
+);
 
 const progressFill =
-  document.getElementById(
-    "progressFill"
-  );
+document.getElementById(
+"progressFill"
+);
 
 const sidebar =
-  document.getElementById(
-    "sidebar"
-  );
+document.getElementById(
+"sidebar"
+);
 
 const menuBtn =
-  document.getElementById(
-    "menuBtn"
-  );
+document.getElementById(
+"menuBtn"
+);
 
 const themeBtn =
-  document.getElementById(
-    "themeBtn"
-  );
+document.getElementById(
+"themeBtn"
+);
 
 const nextPage =
-  document.getElementById(
-    "nextPage"
-  );
+document.getElementById(
+"nextPage"
+);
 
 const prevPage =
-  document.getElementById(
-    "prevPage"
-  );
+document.getElementById(
+"prevPage"
+);
 
 const increaseFont =
-  document.getElementById(
-    "increaseFont"
-  );
+document.getElementById(
+"increaseFont"
+);
 
 const decreaseFont =
-  document.getElementById(
-    "decreaseFont"
-  );
+document.getElementById(
+"decreaseFont"
+);
 
 const bottomThemeBtn =
-  document.getElementById(
-    "bottomThemeBtn"
-  );
+document.getElementById(
+"bottomThemeBtn"
+);
 
 const bottomDecreaseFont =
-  document.getElementById(
-    "bottomDecreaseFont"
-  );
+document.getElementById(
+"bottomDecreaseFont"
+);
 
 const bottomIncreaseFont =
-  document.getElementById(
-    "bottomIncreaseFont"
-  );
+document.getElementById(
+"bottomIncreaseFont"
+);
 
 const bottomMenuBtn =
-  document.getElementById(
-    "bottomMenuBtn"
-  );
+document.getElementById(
+"bottomMenuBtn"
+);
 
 const closeAppBtn =
-  document.getElementById(
-    "closeAppBtn"
-  );
+document.getElementById(
+"closeAppBtn"
+);
 
 const searchBtn =
-  document.getElementById(
-    "searchBtn"
-  );
+document.getElementById(
+"searchBtn"
+);
 
 const searchModal =
-  document.getElementById(
-    "searchModal"
-  );
+document.getElementById(
+"searchModal"
+);
 
 const searchInput =
-  document.getElementById(
-    "searchInput"
-  );
+document.getElementById(
+"searchInput"
+);
 
 const closeSearch =
-  document.getElementById(
-    "closeSearch"
-  );
+document.getElementById(
+"closeSearch"
+);
 
 const searchResults =
-  document.getElementById(
-    "searchResults"
-  );
+document.getElementById(
+"searchResults"
+);
 
 const header =
-  document.querySelector(
-    "header"
-  );
+document.querySelector(
+"header"
+);
 
 const footer =
-  document.querySelector(
-    "footer"
-  );
+document.querySelector(
+"footer"
+);
 
 let rendition;
 let book;
 
 let controlsVisible =
-  true;
+true;
 
 let controlsTimer;
 
 let fontSize =
-  Number(
-    localStorage.getItem(
-      "beta-fontSize"
-    )
-  ) || 100;
+Number(
+localStorage.getItem(
+"beta-fontSize"
+)
+) || 100;
 
 /* =========================
-   LOAD BOOK
+LOAD BOOK
 ========================= */
 
 async function loadBook() {
 
-  try {
+try {
 
-    const response =
-      await fetch(
-        "./library/sample.epub"
-      );
+const response =  
+  await fetch(  
+    "./library/sample.epub"  
+  );  
 
-    if (!response.ok) {
+if (!response.ok) {  
 
-      throw new Error(
-        "EPUB file not found."
-      );
+  throw new Error(  
+    "EPUB file not found."  
+  );  
 
-    }
+}  
 
-    const blob =
-      await response.blob();
+const blob =  
+  await response.blob();  
 
-    book = ePub(blob);
+book = ePub(blob);  
 
-    startReader();
+startReader();
 
-  }
+}
 
-  catch (error) {
+catch (error) {
 
-    console.error(error);
+console.error(error);  
 
-    alert(
-      "Failed to load EPUB."
-    );
+alert(  
+  "Failed to load EPUB."  
+);
 
-  }
+}
 
 }
 
 /* =========================
-   START READER
+START READER
 ========================= */
 
 function startReader() {
 
-  rendition =
-    book.renderTo(
-      "viewer",
-      {
-        width: "100%",
-        height: "100%",
-        spread: "none",
-        manager: "default",
-        flow: "paginated",
-        snap: true
-      }
-    );
+rendition =
+book.renderTo(
+"viewer",
+{
+width: "100%",
+height: "100%",
+spread: "none",
+manager: "default",
+flow: "paginated",
+snap: true
+}
+);
 
-  const savedLocation =
-    localStorage.getItem(
-      "beta-epub-location"
-    );
+const savedLocation =
+localStorage.getItem(
+"beta-epub-location"
+);
 
-  rendition.display(
-    savedLocation || undefined
-  );
+rendition.display(
+savedLocation || undefined
+);
 
-  rendition.themes.fontSize(
-    fontSize + "%"
-  );
+rendition.themes.fontSize(
+fontSize + "%"
+);
 
-  menuBtn.textContent = "â˜°";
-  bottomMenuBtn.textContent = "â˜°";
+  menuBtn.textContent = "☰";
+  bottomMenuBtn.textContent = "☰";
 
-  applyTheme();
-  autoHideControls();
+applyTheme();
 
-  book.ready
-    .then(async () => {
+autoHideControls();
 
-      toc.innerHTML = "";
+book.ready
+.then(async () => {
 
-      const navigation =
-        book.navigation;
+toc.innerHTML = "";  
 
-      navigation.toc.forEach(
-        chapter => {
+  const navigation =  
+    book.navigation;  
 
-          const link =
-            document.createElement(
-              "a"
-            );
+  navigation.toc.forEach(  
+    chapter => {  
 
-          link.textContent =
-            chapter.label;
+      const link =  
+        document.createElement(  
+          "a"  
+        );  
 
-          link.href = "#";
+      link.textContent =  
+        chapter.label;  
 
-          link.addEventListener(
-            "click",
-            e => {
+      link.href = "#";  
 
-              e.preventDefault();
+      link.addEventListener(  
+        "click",  
+        e => {  
 
-              rendition.display(
-                chapter.href
-              );
+          e.preventDefault();  
 
-              sidebar.classList.remove(
-                "active"
-              );
+          rendition.display(  
+            chapter.href  
+          );  
 
-              showControls();
+          sidebar.classList.remove(  
+            "active"  
+          );  
 
-            }
-          );
+          showControls();  
 
-          toc.appendChild(
-            link
-          );
+        }  
+      );  
 
-        }
-      );
+      toc.appendChild(  
+        link  
+      );  
 
-      await book.locations.generate(
-        1000
-      );
+    }  
+  );  
 
-    });
+  await book.locations.generate(  
+    1000  
+  );  
 
-  rendition.on(
-    "relocated",
-    location => {
+});
 
-      try {
+rendition.on(
+"relocated",
+location => {
 
-        const percentage =
-          book.locations
-            .percentageFromCfi(
-              location.start.cfi
-            );
+try {  
 
-        const percent =
-          Math.floor(
-            percentage * 100
-          );
+    const percentage =  
+      book.locations  
+        .percentageFromCfi(  
+          location.start.cfi  
+        );  
 
-        progressText.textContent =
-          percent + "%";
+    const percent =  
+      Math.floor(  
+        percentage * 100  
+      );  
 
-        progressFill.style.width =
-          percent + "%";
+    progressText.textContent =  
+      percent + "%";  
 
-        localStorage.setItem(
-          "beta-epub-location",
-          location.start.cfi
-        );
+    progressFill.style.width =  
+      percent + "%";  
 
-      }
+    localStorage.setItem(  
+      "beta-epub-location",  
+      location.start.cfi  
+    );  
 
-      catch (error) {
+  }  
 
-        console.error(error);
+  catch (error) {  
 
-      }
+    console.error(error);  
 
-    }
-  );
+  }  
+
+}
+
+);
 
 }
 
 /* =========================
-   AUTO HIDE CONTROLS
+AUTO HIDE CONTROLS
 ========================= */
 
 function autoHideControls() {
 
-  clearTimeout(
-    controlsTimer
-  );
+clearTimeout(
+controlsTimer
+);
 
-  header.classList.remove(
-    "hideControls"
-  );
+header.classList.remove(
+"hideControls"
+);
 
-  footer.classList.remove(
-    "hideControls"
-  );
+footer.classList.remove(
+"hideControls"
+);
 
-  controlsVisible = true;
+controlsVisible = true;
 
-  controlsTimer =
-    setTimeout(
-      () => {
+controlsTimer =
+setTimeout(
+() => {
 
-        if (
-          sidebar.classList.contains(
-            "active"
-          )
-        ) {
+if (  
+      sidebar.classList.contains(  
+        "active"  
+      )  
+    ) {  
 
-          return;
+      return;  
 
-        }
+    }  
 
-        if (
-          searchModal.classList.contains(
-            "active"
-          )
-        ) {
+    if (  
+      searchModal.classList.contains(  
+        "active"  
+      )  
+    ) {  
 
-          return;
+      return;  
 
-        }
+    }  
 
-        header.classList.add(
-          "hideControls"
-        );
+    header.classList.add(  
+      "hideControls"  
+    );  
 
-        footer.classList.add(
-          "hideControls"
-        );
+    footer.classList.add(  
+      "hideControls"  
+    );  
 
-        controlsVisible = false;
+    controlsVisible = false;  
 
-      },
-      2500
-    );
+  },  
+  2500  
+);
 
 }
 
 /* =========================
-   SHOW CONTROLS
+SHOW CONTROLS
 ========================= */
 
 function showControls() {
 
-  clearTimeout(
-    controlsTimer
-  );
+clearTimeout(
+controlsTimer
+);
 
-  header.classList.remove(
-    "hideControls"
-  );
+header.classList.remove(
+"hideControls"
+);
 
-  footer.classList.remove(
-    "hideControls"
-  );
+footer.classList.remove(
+"hideControls"
+);
 
-  controlsVisible = true;
+controlsVisible = true;
 
-  autoHideControls();
+autoHideControls();
 
 }
 
 /* =========================
-   TAP VIEWER TO RESTORE
+TAP VIEWER TO RESTORE
 ========================= */
 
 viewer.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    if (
-      !controlsVisible
-    ) {
+if (  
+  !controlsVisible  
+) {  
 
-      showControls();
+  showControls();  
 
-    }
+}
 
-  }
+}
 );
 
 /* =========================
-   KEEP CONTROLS ACTIVE
+KEEP CONTROLS ACTIVE
 ========================= */
 
 [
-  header,
-  footer,
-  sidebar,
-  searchModal
+header,
+footer,
+sidebar,
+searchModal
 ].forEach(
-  element => {
+element => {
 
-    element.addEventListener(
-      "click",
-      () => {
+element.addEventListener(  
+  "click",  
+  () => {  
 
-        showControls();
+    showControls();  
 
-      }
-    );
-
-  }
+  }  
 );
+
+}
+);
+
 
 /* =========================
    THEME
@@ -447,13 +450,13 @@ function applyTheme() {
 
   themeBtn.textContent =
     darkMode
-      ? "ðŸŒ™"
-      : "â˜€";
+      ? "🌙"
+      : "☀";
 
   bottomThemeBtn.textContent =
     darkMode
-      ? "ðŸŒ™"
-      : "â˜€";
+      ? "🌙"
+      : "☀";
 
   if (!rendition) return;
 
@@ -505,210 +508,212 @@ function applyTheme() {
 
 }
 
+
 /* =========================
-   SEARCH
+SEARCH
 ========================= */
 
 async function searchBook(
-  query
+query
 ) {
 
-  searchResults.innerHTML =
-    "Searching...";
+searchResults.innerHTML =
+"Searching...";
 
-  const results = [];
+const results = [];
 
-  try {
+try {
 
-    for (
-      const item of book.spine.spineItems
-    ) {
+for (  
+  const item of book.spine.spineItems  
+) {  
 
-      await item.load(
-        book.load.bind(book)
-      );
+  await item.load(  
+    book.load.bind(book)  
+  );  
 
-      const doc =
-        item.document;
+  const doc =  
+    item.document;  
 
-      const walker =
-        doc.createTreeWalker(
-          doc.body,
-          NodeFilter.SHOW_TEXT
-        );
+  const walker =  
+    doc.createTreeWalker(  
+      doc.body,  
+      NodeFilter.SHOW_TEXT  
+    );  
 
-      let node;
+  let node;  
 
-      while (
-        (node = walker.nextNode())
-      ) {
+  while (  
+    (node = walker.nextNode())  
+  ) {  
 
-        const text =
-          node.textContent;
+    const text =  
+      node.textContent;  
 
-        const lowerText =
-          text.toLowerCase();
+    const lowerText =  
+      text.toLowerCase();  
 
-        const lowerQuery =
-          query.toLowerCase();
+    const lowerQuery =  
+      query.toLowerCase();  
 
-        const index =
-          lowerText.indexOf(
-            lowerQuery
-          );
+    const index =  
+      lowerText.indexOf(  
+        lowerQuery  
+      );  
 
-        if (index !== -1) {
+    if (index !== -1) {  
 
-          const range =
-            doc.createRange();
+      const range =  
+        doc.createRange();  
 
-          range.setStart(
-            node,
-            index
-          );
+      range.setStart(  
+        node,  
+        index  
+      );  
 
-          range.setEnd(
-            node,
-            index +
-            query.length
-          );
+      range.setEnd(  
+        node,  
+        index +  
+        query.length  
+      );  
 
-          const cfi =
-            item.cfiFromRange(
-              range
-            );
+      const cfi =  
+        item.cfiFromRange(  
+          range  
+        );  
 
-          const snippet =
-            text.substring(
-              Math.max(
-                0,
-                index - 40
-              ),
-              index + 80
-            );
+      const snippet =  
+        text.substring(  
+          Math.max(  
+            0,  
+            index - 40  
+          ),  
+          index + 80  
+        );  
 
-          results.push({
+      results.push({  
 
-            cfi,
+        cfi,  
 
-            excerpt:
-              snippet
+        excerpt:  
+          snippet  
 
-          });
+      });  
 
-        }
+    }  
 
-      }
+  }  
 
-      item.unload();
+  item.unload();  
 
-    }
+}  
 
-    renderSearchResults(
-      results
-    );
+renderSearchResults(  
+  results  
+);
 
-  }
+}
 
-  catch (error) {
+catch (error) {
 
-    console.error(error);
+console.error(error);  
 
-    searchResults.innerHTML =
-      "Search failed.";
+searchResults.innerHTML =  
+  "Search failed.";
 
-  }
+}
 
 }
 
 function renderSearchResults(
-  results
+results
 ) {
 
-  searchResults.innerHTML =
-    "";
+searchResults.innerHTML =
+"";
 
-  if (!results.length) {
+if (!results.length) {
 
-    searchResults.innerHTML =
-      "No results found.";
+searchResults.innerHTML =  
+  "No results found.";  
 
-    return;
+return;
 
-  }
+}
 
-  results.forEach(
-    result => {
+results.forEach(
+result => {
 
-      const div =
-        document.createElement(
-          "div"
-        );
+const div =  
+    document.createElement(  
+      "div"  
+    );  
 
-      div.className =
-        "searchItem";
+  div.className =  
+    "searchItem";  
 
-      div.textContent =
-        result.excerpt;
+  div.textContent =  
+    result.excerpt;  
 
-      div.addEventListener(
-        "click",
-        async () => {
+  div.addEventListener(  
+    "click",  
+    async () => {  
 
-          try {
+      try {  
 
-            await rendition.display(
-              result.cfi
-            );
+        await rendition.display(  
+          result.cfi  
+        );  
 
-            searchModal.classList.remove(
-              "active"
-            );
+        searchModal.classList.remove(  
+          "active"  
+        );  
 
-            showControls();
+        showControls();  
 
-          }
+      }  
 
-          catch (error) {
+      catch (error) {  
 
-            console.error(
-              error
-            );
+        console.error(  
+          error  
+        );  
 
-            alert(
-              "Could not open result."
-            );
+        alert(  
+          "Could not open result."  
+        );  
 
-          }
+      }  
 
-        }
-      );
+    }  
+  );  
 
-      searchResults.appendChild(
-        div
-      );
+  searchResults.appendChild(  
+    div  
+  );  
 
-    }
-  );
+}
+
+);
 
 }
 
 /* =========================
-   USER ACTIVITY
+USER ACTIVITY
 ========================= */
 
 document.addEventListener(
-  "mousemove",
-  autoHideControls
+"mousemove",
+autoHideControls
 );
 
 document.addEventListener(
-  "touchstart",
-  autoHideControls
+"touchstart",
+autoHideControls
 );
 
 /* =========================
-   BUTTON EVENTS
+BUTTON EVENTS
 ========================= */
 
 menuBtn.addEventListener(
@@ -726,13 +731,13 @@ menuBtn.addEventListener(
 
     menuBtn.textContent =
       isOpen
-        ? "â˜°"
-        : "â˜°";
+        ? "☰"
+        : "☰";
 
     bottomMenuBtn.textContent =
       isOpen
-        ? "â˜°"
-        : "â˜°";
+        ? "☰"
+        : "☰";
 
     showControls();
 
@@ -769,189 +774,201 @@ bottomThemeBtn.addEventListener(
   }
 );
 
+nextPage.addEventListener(
+"click",
+() => {
+
+rendition.next();  
+
+showControls();
+
+}
+);
+
 prevPage.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    rendition.prev();
+rendition.prev();  
 
-    showControls();
+showControls();
 
-  }
+}
 );
 
 increaseFont.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    fontSize += 10;
+fontSize += 10;  
 
-    rendition.themes.fontSize(
-      fontSize + "%"
-    );
+rendition.themes.fontSize(  
+  fontSize + "%"  
+);  
 
-    localStorage.setItem(
-      "beta-fontSize",
-      fontSize
-    );
+localStorage.setItem(  
+  "fontSize",  
+  fontSize  
+);  
 
-    showControls();
+showControls();
 
-  }
+}
 );
 
 decreaseFont.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    if (fontSize <= 70)
-      return;
+if (fontSize <= 70)  
+  return;  
 
-    fontSize -= 10;
+fontSize -= 10;  
 
-    rendition.themes.fontSize(
-      fontSize + "%"
-    );
+rendition.themes.fontSize(  
+  fontSize + "%"  
+);  
 
-    localStorage.setItem(
-      "beta-fontSize",
-      fontSize
-    );
+localStorage.setItem(  
+  "fontSize",  
+  fontSize  
+);  
 
-    showControls();
+showControls();
 
-  }
+}
 );
 
 bottomThemeBtn.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    themeBtn.click();
+themeBtn.click();
 
-  }
+}
 );
 
 bottomDecreaseFont.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    decreaseFont.click();
+decreaseFont.click();
 
-  }
+}
 );
 
 bottomIncreaseFont.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    increaseFont.click();
+increaseFont.click();
 
-  }
+}
 );
 
 bottomMenuBtn.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    menuBtn.click();
+menuBtn.click();
 
-  }
+}
 );
 
 closeAppBtn.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    window.close();
+history.back();
 
-  }
+}
 );
 
 searchBtn.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    searchModal.classList.add(
-      "active"
-    );
+searchModal.classList.add(  
+  "active"  
+);  
 
-    searchInput.focus();
+searchInput.focus();  
 
-    showControls();
+showControls();
 
-  }
+}
 );
 
 closeSearch.addEventListener(
-  "click",
-  () => {
+"click",
+() => {
 
-    searchModal.classList.remove(
-      "active"
-    );
+searchModal.classList.remove(  
+  "active"  
+);  
 
-    showControls();
+showControls();
 
-  }
+}
 );
 
 searchInput.addEventListener(
-  "keydown",
-  e => {
+"keydown",
+e => {
 
-    if (
-      e.key === "Enter"
-    ) {
+if (  
+  e.key === "Enter"  
+) {  
 
-      const query =
-        searchInput.value.trim();
+  const query =  
+    searchInput.value.trim();  
 
-      if (!query)
-        return;
+  if (!query)  
+    return;  
 
-      searchBook(query);
+  searchBook(query);  
 
-    }
+}
 
-  }
+}
 );
 
 /* =========================
-   SERVICE WORKER
+SERVICE WORKER
 ========================= */
 
 if (
-  "serviceWorker" in navigator
+"serviceWorker" in navigator
 ) {
 
-  window.addEventListener(
-    "load",
-    async () => {
+window.addEventListener(
+"load",
+async () => {
 
-      try {
+try {  
 
-        await navigator
-          .serviceWorker
-          .register(
-            "./sw-beta.js"
-          );
+    await navigator  
+      .serviceWorker  
+      .register(  
+        "./sw-beta.js"  
+      );  
 
-      }
+  }  
 
-      catch (error) {
+  catch (error) {  
 
-        console.error(error);
+    console.error(error);  
 
-      }
+  }  
 
-    }
-  );
+}
+
+);
 
 }
 
 /* =========================
-   INIT
+INIT
 ========================= */
 
 loadBook();
