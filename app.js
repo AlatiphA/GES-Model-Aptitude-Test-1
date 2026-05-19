@@ -206,6 +206,7 @@ function startReader() {
   bottomMenuBtn.textContent = "☰";
 
   applyTheme();
+  setupTapGestures();
   autoHideControls();
 
   book.ready
@@ -383,6 +384,129 @@ function showControls() {
   controlsVisible = true;
 
   autoHideControls();
+
+}
+
+/* =========================
+   TAP GESTURES
+========================= */
+
+function setupTapGestures() {
+
+  rendition.on(
+    "rendered",
+    () => {
+
+      const iframe =
+        viewer.querySelector(
+          "iframe"
+        );
+
+      if (!iframe) return;
+
+      const doc =
+        iframe.contentDocument;
+
+      if (!doc) return;
+
+      if (
+        doc.body.dataset
+          .gesturesLoaded
+      ) {
+
+        return;
+
+      }
+
+      doc.body.dataset
+        .gesturesLoaded =
+        "true";
+
+      let tapping = false;
+
+      doc.addEventListener(
+        "click",
+        e => {
+
+          if (tapping)
+            return;
+
+          const target =
+            e.target;
+
+          /* KEEP LINKS WORKING */
+
+          if (
+            target.closest("a") ||
+            target.closest("button") ||
+            target.closest("input")
+          ) {
+
+            return;
+
+          }
+
+          tapping = true;
+
+          setTimeout(
+            () => {
+
+              tapping = false;
+
+            },
+            300
+          );
+
+          const width =
+            window.innerWidth;
+
+          const tapX =
+            e.clientX;
+
+          const leftZone =
+            width * 0.30;
+
+          const rightZone =
+            width * 0.70;
+
+          /* LEFT = PREV */
+
+          if (
+            tapX < leftZone
+          ) {
+
+            rendition.prev();
+
+            showControls();
+
+            return;
+
+          }
+
+          /* RIGHT = NEXT */
+
+          if (
+            tapX > rightZone
+          ) {
+
+            rendition.next();
+
+            showControls();
+
+            return;
+
+          }
+
+          /* CENTER = CONTROLS */
+
+          showControls();
+
+        },
+        true
+      );
+
+    }
+  );
 
 }
 
