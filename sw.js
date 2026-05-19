@@ -1,4 +1,4 @@
-const CACHE_NAME = "alatipha-epub-v21";
+const CACHE_NAME = "alatipha-epub-v22";
 
 const FILES_TO_CACHE = [
 
