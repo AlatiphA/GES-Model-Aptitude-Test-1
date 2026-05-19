@@ -429,6 +429,7 @@ viewer.addEventListener(
   }
 );
 
+
 /* =========================
    THEME
 ========================= */
@@ -446,14 +447,14 @@ function applyTheme() {
   );
 
   themeBtn.textContent =
-  darkMode
-    ? "🌙"
-    : "☀";
+    darkMode
+      ? "🌙"
+      : "☀";
 
-bottomThemeBtn.textContent =
-  darkMode
-    ? "🌙"
-    : "☀";
+  bottomThemeBtn.textContent =
+    darkMode
+      ? "🌙"
+      : "☀";
 
   if (!rendition) return;
 
@@ -768,6 +769,7 @@ bottomThemeBtn.addEventListener(
 
   }
 );
+
 
 prevPage.addEventListener(
   "click",
