@@ -15,11 +15,11 @@ const FILES_TO_CACHE = [
   "./index.html",
   "./style.css",
   "./app.js",
-  "./sw-mat2.js",
-  "./manifest-mat2.json",
+  "./sw-mat.js",
+  "./manifest-mat.json",
   "./library/sample.epub",
-  "./icon-mat2-192.png",
-  "./icon-mat2-512.png",
+  "./icon-mat-192.png",
+  "./icon-mat-512.png",
 ];
 
 /* =========================
