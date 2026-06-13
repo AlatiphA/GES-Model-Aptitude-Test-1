@@ -1,6 +1,6 @@
 {
-  "name": "GES Model Aptitude Test 2",
-  "short_name": "GES Mat 2",
+  "name": "GES Model Aptitude Test 1",
+  "short_name": "GES Mat 1",
   "description": "Offline EPUB reader for GES Promotion Aptitude Test — 2026 Edition",
   "version": "2.0.0",
   "start_url": "./index.html",
@@ -12,13 +12,13 @@
   "categories": ["books", "education"],
   "icons": [
     {
-      "src": "./icon-mat2-192.png",
+      "src": "./icon-mat-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./icon-mat2-512.png",
+      "src": "./icon-mat-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
