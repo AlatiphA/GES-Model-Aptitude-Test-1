@@ -129,7 +129,7 @@ let controlsVisible =
 let fontSize =
   Number(
     localStorage.getItem(
-      "fontSize-mat2"
+      "fontSize-mat"
     )
   ) || 100;
 
@@ -149,10 +149,10 @@ if (versionEl)
     "v" + APP_VERSION;
 
 const READER_DATA_KEY =
-  "ges-mat2-reader-data";
+  "ges-mat-reader-data";
 
 const BOOKMARKS_KEY =
-  "ges-mat2-bookmarks";
+  "ges-mat-bookmarks";
 
 
 /* =========================
@@ -1703,7 +1703,7 @@ bottomDecreaseFont.addEventListener(
     );
 
     localStorage.setItem(
-      "fontSize-mat2",
+      "fontSize-mat",
       fontSize
     );
 
@@ -1721,7 +1721,7 @@ bottomIncreaseFont.addEventListener(
     );
 
     localStorage.setItem(
-      "fontSize-mat2",
+      "fontSize-mat",
       fontSize
     );
 
@@ -1795,7 +1795,7 @@ if (
         await navigator
           .serviceWorker
           .register(
-            "./sw-mat2.js"
+            "./sw-mat.js"
           );
 
       }
@@ -2069,9 +2069,9 @@ loadBook();
       document.createElement("div");
     banner.id = "installBanner";
     banner.innerHTML = `
-      <img src="icon-mat2-192.png" alt="icon" />
+      <img src="icon-mat-192.png" alt="icon" />
       <div class="ib-text">
-        <div class="ib-title">GES Model Aptitude Test 2</div>
+        <div class="ib-title">GES Model Aptitude Test 1</div>
         <div class="ib-sub">Add to Home Screen for offline reading</div>
       </div>
       <div class="ib-actions">
@@ -2135,7 +2135,7 @@ loadBook();
       banner.id = "iosBanner";
       banner.innerHTML = `
         <div class="ios-title">
-          📖 GES Model Aptitude Test 2
+          📖 GES Model Aptitude Test 1
         </div>
         <div class="ios-steps">
           Tap <strong>Share</strong> (□↑) at the bottom of Safari<br>
