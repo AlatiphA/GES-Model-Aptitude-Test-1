@@ -1,5 +1,5 @@
 /* =====================================================
-   Model Aptitude Test 2 — PWA Install Prompt
+   Model Aptitude Test 1 — PWA Install Prompt
    install.js
    ─────────────────────────────────────────────────
    Handles install prompt for Android/Chrome
@@ -133,7 +133,7 @@
   `;
   document.head.appendChild(style);
 
-  const INSTALL_KEY = "mat2forges_install_dismissed";
+  const INSTALL_KEY = "mat1forges_install_dismissed";
   const dismissed =
     localStorage.getItem(INSTALL_KEY);
 
@@ -159,9 +159,9 @@
       document.createElement("div");
     banner.id = "installBanner";
     banner.innerHTML = `
-      <img src="icon-regular-192.png" alt="icon" />
+      <img src="icon-mat1-192.png" alt="icon" />
       <div class="ib-text">
-        <div class="ib-title">Model Aptitude Test (MAT) 2</div>
+        <div class="ib-title">GES Model Aptitude Test (MAT) 1</div>
         <div class="ib-sub">Add to Home Screen for offline reading</div>
       </div>
       <div class="ib-actions">
@@ -225,7 +225,7 @@
       banner.id = "iosBanner";
       banner.innerHTML = `
         <div class="ios-title">
-          📖 Install Model Aptitude Test (MAT) 2
+          📖 Install GES Model Aptitude Test (MAT) 1
         </div>
         <div class="ios-steps">
           Tap <strong>Share</strong> (□↑) at the bottom of Safari<br>
