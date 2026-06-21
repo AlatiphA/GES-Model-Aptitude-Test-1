@@ -159,7 +159,7 @@
       document.createElement("div");
     banner.id = "installBanner";
     banner.innerHTML = `
-      <img src="icon-mat1-192.png" alt="icon" />
+      <img src="icon-mat-192.png" alt="icon" />
       <div class="ib-text">
         <div class="ib-title">GES Model Aptitude Test (MAT) 1</div>
         <div class="ib-sub">Add to Home Screen for offline reading</div>
