@@ -253,7 +253,7 @@ footer {
 
   width: 0%;
 
-  background: #4aa3ff;
+  background: #956433;
 }
 
 .bottomBtn {
@@ -655,8 +655,8 @@ body.dark .sidebarTabs {
 
 .sidebarTab.active {
   opacity: 1;
-  border-bottom-color: #4aa3ff;
-  color: #4aa3ff;
+  border-bottom-color: #956433;
+  color: #956433;
 }
 
 /* =========================
@@ -837,7 +837,7 @@ body.dark .bookmarkRow {
 }
 
 .themeOption.active {
-  color: #4aa3ff;
+  color: #956433;
 }
 
 .themeSwatchWrap {
@@ -850,7 +850,7 @@ body.dark .bookmarkRow {
 }
 
 .themeOption.active .themeSwatchWrap {
-  border-color: #4aa3ff;
+  border-color: #956433;
 }
 
 .themeSwatch {
