@@ -2013,7 +2013,7 @@ if (
         await navigator
           .serviceWorker
           .register(
-            "./sw.js"
+            "./sw-mat.js"
           );
 
       }
