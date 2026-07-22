@@ -170,10 +170,10 @@ if (versionEl)
     "v" + APP_VERSION;
 
 const READER_DATA_KEY =
-  "ges-pasco-data";
+  "model-aptitude-test-data";
 
 const BOOKMARKS_KEY =
-  "ges-pasco-bookmarks";
+  "model-aptitude-test-bookmarks";
 
 
 /* =========================
