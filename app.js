@@ -170,10 +170,10 @@ if (versionEl)
     "v" + APP_VERSION;
 
 const READER_DATA_KEY =
-  "ges-pasco-data";
+  "ges-mat-data";
 
 const BOOKMARKS_KEY =
-  "ges-pasco-bookmarks";
+  "ges-mst-bookmarks";
 
 
 /* =========================
@@ -2013,7 +2013,7 @@ if (
         await navigator
           .serviceWorker
           .register(
-            "./sw.js"
+            "./sw-mat.js"
           );
 
       }
