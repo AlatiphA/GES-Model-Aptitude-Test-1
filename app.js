@@ -159,7 +159,7 @@ let fontFamily =
    APP VERSION
    Change this on every release
 ========================= */
-const APP_VERSION = "3.2.7";
+const APP_VERSION = "3.2.8";
 
 const versionEl =
   document.getElementById(
