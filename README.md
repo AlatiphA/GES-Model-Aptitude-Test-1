@@ -1,4 +1,4 @@
-# GES Model Aptitude Test 1
+# AlatiphA GES Pasco
 
 A fast, lightweight, installable EPUB Reader PWA built with HTML, CSS, JavaScript, and epub.js.
 
