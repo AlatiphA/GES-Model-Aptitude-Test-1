@@ -1,5 +1,5 @@
 /* =====================================================
-   Model Aptitude Test 1 — PWA Install Prompt
+   GES Model Aptitude Test 1 — PWA Install Prompt
    install.js
    ─────────────────────────────────────────────────
    Handles install prompt for Android/Chrome
