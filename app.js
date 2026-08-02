@@ -159,7 +159,7 @@ let fontFamily =
    APP VERSION
    Change this on every release
 ========================= */
-const APP_VERSION = "3.4.4";
+const APP_VERSION = "3.4.5";
 
 const versionEl =
   document.getElementById(
@@ -170,10 +170,10 @@ if (versionEl)
     "v" + APP_VERSION;
 
 const READER_DATA_KEY =
-  "ges-mat2-data";
+  "ges-mat-data";
 
 const BOOKMARKS_KEY =
-  "ges-mat2-bookmarks";
+  "ges-mat-bookmarks";
 
 
 /* =========================
@@ -2159,7 +2159,7 @@ if (
         await navigator
           .serviceWorker
           .register(
-            "./sw-mat2.js"
+            "./sw-mat.js"
           );
 
       }
