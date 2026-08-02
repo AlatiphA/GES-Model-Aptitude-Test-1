@@ -7,8 +7,8 @@
    get a "New version available" prompt on next visit.
 ===================================================== */
 
-const APP_VERSION  = "v3.4.4";
-const CACHE_NAME   = `model-aptitude-test2-${APP_VERSION}`;
+const APP_VERSION  = "v3.4.5";
+const CACHE_NAME   = `model-aptitude-test-${APP_VERSION}`;
 
 /* ====================
    APP SHELL
@@ -20,8 +20,8 @@ const FILES_TO_CACHE = [
   "./faq.html",
   "./style.css",
   "./app.js",
-  "./sw-mat2.js",
-  "./manifest-mat2.json",
+  "./sw-mat.js",
+  "./manifest-mat.json",
   "./library/sample.epub",
   "./icon-192.png",
   "./icon-512.png",
